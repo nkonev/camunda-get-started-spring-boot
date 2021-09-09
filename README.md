@@ -17,3 +17,8 @@ git checkout -f Start
 ```
 
 License: The source files in this repository are made available under the [Apache License Version 2.0](./LICENSE).
+
+# Links
+Spring Boot https://docs.camunda.org/get-started/spring-boot/model/
+Business Process creation https://docs.camunda.org/get-started/quick-start/service-task/
+Modeler (GUI) https://camunda.com/download/modeler/
