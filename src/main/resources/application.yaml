@@ -12,7 +12,3 @@ spring.datasource:
   username: camunda
   password: "camundapassword"
   driverClassName: org.postgresql.Driver
-camunda:
-  bpm:
-    webapp:
-      application-path:
