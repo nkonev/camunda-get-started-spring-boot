@@ -1,6 +1,5 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,7 +60,6 @@ public class MortgageController {
 
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public MortgageApp get() {
         return new MortgageApp();
