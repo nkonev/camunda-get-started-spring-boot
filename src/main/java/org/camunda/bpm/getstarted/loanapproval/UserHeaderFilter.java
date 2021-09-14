@@ -18,6 +18,9 @@ class HeaderAuthenticationConverter implements AuthenticationConverter {
     @Override
     public Authentication convert(HttpServletRequest request) {
         String user = request.getHeader("X-USER");
+        if (user == null) {
+            return null;
+        }
         final var headers = Collections.list(request.getHeaders("X-ROLE"))
                 .stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
