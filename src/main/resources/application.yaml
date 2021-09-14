@@ -5,3 +5,10 @@ camunda.bpm:
     firstName: Demo
   filter:
     create: All tasks
+
+spring.datasource:
+  # https://jdbc.postgresql.org/documentation/head/connect.html#connection-parameters
+  url: jdbc:postgresql://localhost:5444/camunda?connectTimeout=10&socketTimeout=40
+  username: camunda
+  password: "camundapassword"
+  driverClassName: org.postgresql.Driver
