@@ -7,8 +7,10 @@
   <properties>
     <camunda.spring-boot.version>7.15.0</camunda.spring-boot.version>
     <spring-boot.version>2.4.4</spring-boot.version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <java.version>11</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
   </properties>
   
   <dependencyManagement>
@@ -22,7 +24,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
@@ -43,11 +45,42 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jdbc</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
   
    <build>
-    <plugins>
+     <pluginManagement>
+       <plugins>
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <version>${maven.compiler.plugin.version}</version>
+           <configuration>
+             <release>${java.version}</release>
+             <!-- for dummy IntelliJ -->
+             <source>${java.version}</source>
+             <target>${java.version}</target>
+           </configuration>
+         </plugin>
+       </plugins>
+     </pluginManagement>
+
+     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
