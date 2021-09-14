@@ -25,7 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
+@EnableJdbcAuditing
+@EnableJdbcRepositories
 @SpringBootApplication
 @EnableProcessApplication
 public class WebappExampleProcessApplication implements InitializingBean {

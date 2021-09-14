@@ -1,47 +1,40 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-class CreateUserDto {
-    private String login;
-    private String password;
-    private MortgageApp app;
+import java.time.Instant;
+import java.util.UUID;
 
-    public CreateUserDto() {
+@RestController
+@RequestMapping("/mortgage-application")
+public class MortgageController {
+
+    private static final String USER_ID_HEADER = "X-USER-ID";
+
+    @Autowired
+    private MortgageApplicationRepository mortgageApplicationRepository;
+
+    @PostMapping
+    public MortgageAppDto create(@RequestHeader(USER_ID_HEADER)String userId, @RequestBody MortgageAppDto createDto) {
+        return mortgageApplicationRepository.save(createDto.toEntityForCreate(UUID.fromString(userId))).toDto();
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public MortgageApp getApp() {
-        return app;
-    }
-
-    public void setApp(MortgageApp app) {
-        this.app = app;
+    @GetMapping
+    public MortgageAppDto get(@RequestHeader(USER_ID_HEADER)String userId) {
+        return mortgageApplicationRepository.findLastActual(UUID.fromString(userId)).map(
+                MortgageApplication::toDto).orElse(null);
     }
 }
 
-class MortgageApp {
+class MortgageAppDto {
+    private UUID id;
+    private UUID userId;
     private String property;
+    private Instant createdDateTime;
 
-    public MortgageApp() {
+    public MortgageAppDto() {
     }
 
     public String getProperty() {
@@ -51,17 +44,37 @@ class MortgageApp {
     public void setProperty(String property) {
         this.property = property;
     }
-}
 
-@RestController("/mortgage")
-public class MortgageController {
-    @PostMapping
-    public void register(@RequestBody CreateUserDto createUserDto) {
-
+    public UUID getId() {
+        return id;
     }
 
-    @GetMapping
-    public MortgageApp get() {
-        return new MortgageApp();
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    @JsonIgnore
+    public MortgageApplication toEntityForCreate(UUID userId) {
+        var ret = new MortgageApplication();
+        ret.setProperty(this.property);
+        ret.setUserId(userId);
+        ret.setCreatedDateTime(this.createdDateTime);
+        return ret;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public Instant getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(Instant createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 }

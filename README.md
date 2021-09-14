@@ -37,3 +37,14 @@ curl -i -H 'Cookie: ory_kratos_session=MTYzMTYzMTgxM3xEdi1CQkFFQ180SUFBUkFCRUFBQ
 ```
 http://localhost:8080/camunda
 ```
+
+# Create app
+```
+curl -i -X POST 'http://localhost:8080/mortgage-application' -d '{"property": "Красная Площадь, д. 1"}' -H "X-USER-ID: 30e6037a-dce0-4280-aeac-dfe6fe66900d" -H "Content-Type: application/json"
+curl -i -X POST 'http://localhost:8080/mortgage-application' -d '{"property": "Зелёная Площадь, д. 1"}' -H "X-USER-ID: 30e6037a-dce0-4280-aeac-dfe6fe66900d" -H "Content-Type: application/json"
+```
+
+# Get app
+```
+curl -i 'http://localhost:8080/mortgage-application' -H "X-USER-ID: 30e6037a-dce0-4280-aeac-dfe6fe66900d"
+```

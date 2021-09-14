@@ -23,3 +23,10 @@ create database camunda with owner camunda;
 -- ALTER SYSTEM set log_duration = on;
 --
 
+\connect camunda camunda;
+create table mortgage_application (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    property TEXT,
+    created_date_time TIMESTAMP NOT NULL
+);
