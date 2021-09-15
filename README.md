@@ -59,3 +59,12 @@ curl -i -X POST 'http://localhost:8080/mortgage-application' -d '{"property": "Ð
 ```
 curl -i 'http://localhost:8080/mortgage-application' -H "X-USER-ID: 30e6037a-dce0-4280-aeac-dfe6fe66900d"
 ```
+
+# JS versions
+```
+npm --version
+7.6.0
+
+node --version
+v15.11.0
+```
