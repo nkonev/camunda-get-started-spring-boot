@@ -3,14 +3,14 @@
 version: '3.7'
 
 services:
-  postgresql:
-    image: postgres:13.1
+  mortgage-application-postgresql:
+    image: postgres:13.4
     restart: unless-stopped
     ports:
       - 5444:5432
     volumes:
       - ./docker/postgresql_dev/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - postgres_data:/var/lib/postgresql/data
+      - mortgage_application_postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgresqlPassword
     logging:
@@ -19,5 +19,51 @@ services:
         max-size: "50m"
         max-file: "1"
 
+  kratos-postgresql:
+    image: postgres:13.4
+    ports:
+      - "5400:5432"
+    environment:
+      - POSTGRES_USER=kratos
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=kratos
+    volumes:
+      - kratos_postgres_data:/var/lib/postgresql/data
+
+  kratos-migrate:
+    image: oryd/kratos:v0.7.4-alpha.1
+    environment:
+      - DSN=postgres://kratos:secret@kratos-postgresql:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      - SQA_OPT_OUT=true
+    restart: on-failure
+    depends_on:
+      - kratos-postgresql
+    command: migrate sql -e -y
+
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - '4436:4436'
+      - '4437:4437'
+
+  kratos:
+    depends_on:
+      - kratos-migrate
+    image: oryd/kratos:v0.7.4-alpha.1
+    ports:
+      - '4433:4433' # public
+      - '4434:4434' # admin
+    restart: unless-stopped
+    environment:
+      - DSN=postgres://kratos:secret@kratos-postgresql:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      - LOG_LEVEL=trace
+      - SQA_OPT_OUT=true
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    volumes:
+      - type: bind
+        source: ./docker/kratos-email-password
+        target: /etc/config/kratos
+
 volumes:
-  postgres_data:
+  mortgage_application_postgres_data:
+  kratos_postgres_data:
