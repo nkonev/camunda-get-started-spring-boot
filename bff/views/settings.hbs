@@ -1,0 +1,47 @@
+<div class="content">
+  {{> header}}
+  <div class="container" id="settings">
+    <h2>Settings</h2>
+
+    {{> messages messages=messages className="global" }}
+
+    <form action="{{ui.action}}" method="{{ui.method}}">
+      {{> messages messages=ui.messages }}
+
+      {{> ui_nodes nodes=ui.nodes only="default" }}
+
+      <p>Profile</p>
+      {{> ui_nodes nodes=ui.nodes only="profile" }}
+
+      {{#if (onlyNodes ui.nodes "password")}}
+        <hr class="divider">
+        <p>Password</p>
+        {{> ui_nodes nodes=ui.nodes only="password" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "oidc")}}
+        <hr class="divider">
+        <p>Social Sign In</p>
+        {{> ui_nodes nodes=ui.nodes only="oidc" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "totp")}}
+        <hr class="divider">
+        <p>2FA Authenticator App</p>
+        {{> ui_nodes nodes=ui.nodes only="totp" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "lookup_secret")}}
+        <hr class="divider">
+        <p>Recovery Codes</p>
+        {{> ui_nodes nodes=ui.nodes only="lookup_secret" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "webauthn")}}
+        <hr class="divider">
+        <p>Security Keys</p>
+        {{> ui_nodes nodes=ui.nodes only="webauthn" }}
+      {{/if}}
+    </form>
+  </div>
+</div>
