@@ -27,8 +27,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
         return Promise.reject(flow)
       }
 
-      flow.ui.nodes
-
       // Render the data using a view (e.g. Jade Template):
       res.render('registration', flow)
     })
