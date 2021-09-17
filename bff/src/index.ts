@@ -6,9 +6,8 @@ import registrationHandler from './routes/registration'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT } from './config'
+import config from './config'
 import { getTitle, onlyNodes, toUiNodePartial } from './helpers/ui'
-import * as stubs from './stub/payloads'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
@@ -16,10 +15,8 @@ import morgan from 'morgan'
 import * as https from 'https'
 import * as fs from 'fs'
 import protectSimple from './middleware/simple'
-import protectOathkeeper from './middleware/oathkeeper'
 
-export const protect =
-  config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple
+export const protect = protectSimple
 
 const app = express()
 app.use(morgan('tiny'))
@@ -54,36 +51,14 @@ app.engine(
   })
 )
 
-if (process.env.NODE_ENV === 'stub') {
-  // Setting NODE_ENV to "only-ui" disables all integration and only shows the UI. Useful
-  // when working on CSS or HTML things.
-  app.get('/', dashboard)
-  app.get('/auth/registration', (_: Request, res: Response) => {
-    res.render('registration', {
-      password: stubs.registration.methods.password.config,
-      oidc: stubs.registration.methods.oidc.config,
-    })
-  })
-  app.get('/auth/login', (_: Request, res: Response) => {
-    res.render('login', {
-      password: stubs.login.methods.password.config,
-      oidc: stubs.login.methods.oidc.config,
-    })
-  })
-  app.get('/settings', (_: Request, res: Response) => {
-    res.render('settings', stubs.settings)
-  })
-  app.get('/error', (_: Request, res: Response) => res.render('error'))
-} else {
-  app.get('/', protect, dashboard)
-  app.get('/dashboard', protect, dashboard)
-  app.get('/auth/registration', registrationHandler)
-  app.get('/auth/login', loginHandler)
-  app.get('/error', errorHandler)
-  app.get('/settings', protect, settingsHandler)
-  app.get('/verify', verifyHandler)
-  app.get('/recovery', recoveryHandler)
-}
+app.get('/', protect, dashboard)
+app.get('/dashboard', protect, dashboard)
+app.get('/auth/registration', registrationHandler)
+app.get('/auth/login', loginHandler)
+app.get('/error', errorHandler)
+app.get('/settings', protect, settingsHandler)
+app.get('/verify', verifyHandler)
+app.get('/recovery', recoveryHandler)
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
@@ -104,7 +79,6 @@ const port = Number(process.env.PORT) || 3000
 let listener = () => {
   let proto = config.https.enabled ? 'https' : 'http'
   console.log(`Listening on ${proto}://0.0.0.0:${port}`)
-  console.log(`Security mode: ${config.securityMode}`)
 }
 
 if (config.https.enabled) {
