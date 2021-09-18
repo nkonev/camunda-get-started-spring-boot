@@ -49,7 +49,6 @@ selfservice:
       lifespan: 10m
       ui_url: http://127.0.0.1:8083/api/aaa-self-service/auth/registration
       after:
-        default_browser_return_url: http://127.0.0.1:8083
         password:
           hooks:
             -
