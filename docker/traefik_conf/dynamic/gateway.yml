@@ -4,10 +4,14 @@ http:
       loadBalancer:
         servers:
           - url: http://host.docker.internal:8084
-    aaa-service:
+    kratos-backend-service:
       loadBalancer:
         servers:
           - url: http://host.docker.internal:4433
+    kratos-self-service-ui-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:4455
     mortgage-application-service:
       loadBalancer:
         servers:
@@ -19,12 +23,18 @@ http:
       service: frontend-service
       middlewares:
         - "retry-middleware"
-    aaa-router:
-      rule: "PathPrefix(`/api/aaa`)"
-      service: aaa-service
+    kratos-backend-router:
+      rule: "PathPrefix(`/api/aaa-backend`)"
+      service: kratos-backend-service
       middlewares:
         - "retry-middleware"
-        - "api-aaa-strip-prefix-middleware"
+        - "api-kratos-strip-prefix-middleware"
+    kratos-kratos-self-service-router:
+      rule: "PathPrefix(`/api/aaa-self-service`)"
+      service: kratos-self-service-ui-service
+      middlewares:
+        - "retry-middleware"
+        - "api-kratos-self-strip-prefix-middleware"
     mortgage-application-router:
       rule: "PathPrefix(`/api/mortgage-application`)"
       service: mortgage-application-service
@@ -38,10 +48,14 @@ http:
       stripPrefix:
         prefixes:
           - "/api"
-    api-aaa-strip-prefix-middleware:
+    api-kratos-strip-prefix-middleware:
       stripPrefix:
         prefixes:
-          - "/api/aaa"
+          - "/api/aaa-backend"
+    api-kratos-self-strip-prefix-middleware:
+      stripPrefix:
+        prefixes:
+          - "/api/aaa-self-service"
     retry-middleware:
       retry:
         attempts: 4
@@ -50,4 +64,4 @@ http:
         address: "http://host.docker.internal:4433/sessions/whoami"
         authRequestHeaders:
           - "Cookie"
-        authResponseHeadersRegex: "^X-Auth-"
+        authResponseHeadersRegex: "^x-kratos-"

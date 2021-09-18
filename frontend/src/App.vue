@@ -106,7 +106,7 @@
                 console.log("Logout");
                 axios.post(`/api/logout`).then(({ data }) => {
                     this.$store.commit(UNSET_USER);
-                    bus.$emit(LOGGED_OUT, null);
+                    // TODO redirect
                 });
             },
             goHome() {

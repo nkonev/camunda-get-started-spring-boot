@@ -76,9 +76,11 @@ services:
     environment:
       - KRATOS_PUBLIC_URL=http://kratos:4433/
       - KRATOS_ADMIN_URL=http://kratos:4434/
+      - BASE_URL=http://127.0.0.1:8083/api/aaa-self-service
       - PORT=4455
       - SECURITY_MODE=cookie
-      - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+      - KRATOS_BROWSER_URL=http://127.0.0.1:8083/api/aaa-backend
+      - PROJECT_NAME=Mortgage Online
     restart: on-failure
     ports:
       - "4455:4455"

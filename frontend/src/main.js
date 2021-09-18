@@ -15,16 +15,14 @@ axios.interceptors.response.use((response) => {
   console.log("Catch error", error, error.request, error.response, error.config);
   if (axios.isCancel(error)) {
       return Promise.reject(error)
-  } else if (error && error.response && error.response.status == 401 && error.config.url != '/api/profile') {
+  } else if (error && error.response && error.response.status == 401) {
     console.log("Catch 401 Unauthorized, emitting ", LOGGED_OUT);
     store.commit(UNSET_USER);
-    bus.$emit(LOGGED_OUT, null);
+    window.location.href = '/api/aaa-self-service/auth/login';
     return Promise.reject(error)
   } else {
     const consoleErrorMessage  = "Request: " + JSON.stringify(error.config) + ", Response: " + JSON.stringify(error.response);
     console.error(consoleErrorMessage);
-    const errorMessage  = "Http error. Check the console";
-    vm.$refs.appRef.onError(errorMessage);
     return Promise.reject(error)
   }
 });

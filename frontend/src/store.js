@@ -28,7 +28,7 @@ const store = new Vuex.Store({
     },
     actions: {
         [FETCH_USER_PROFILE](context) {
-            axios.get(`/api/aaa/sessions/whoami`).then(( {data} ) => {
+            axios.get(`/api/aaa-backend/sessions/whoami`).then(( {data} ) => {
                 console.debug("fetched profile =", data);
                 context.commit(SET_USER, data);
             });
