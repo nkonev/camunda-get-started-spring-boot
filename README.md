@@ -33,6 +33,7 @@ docker exec -it camunda-get-started-spring-boot_postgresql_1 psql -U camunda
 ```
 curl -i -H 'Cookie: ory_kratos_session=MTYzMTYzMTgxM3xEdi1CQkFFQ180SUFBUkFCRUFBQVJfLUNBQUVHYzNSeWFXNW5EQThBRFhObGMzTnBiMjVmZEc5clpXNEdjM1J5YVc1bkRDSUFJRXhqYVV0elJIbG9NMlEzYkdwdWVscFhZbk5ETm10emVsZHFTRWhLWTNoS3ytInr_UoJIHlpKDwk7jFBNWDn5-ziOP6L8Si2HJj7gMw=='  'http://127.0.0.1:4433/sessions/whoami'
 ```
+It responds 'x-kratos-authenticated-identity-id' header so we can use http forward auth
 
 # Start BFF
 ```
