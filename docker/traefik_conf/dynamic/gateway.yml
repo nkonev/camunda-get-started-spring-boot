@@ -1,0 +1,53 @@
+http:
+  services:
+    frontend-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:8084
+    aaa-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:4433
+    mortgage-application-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:8066
+
+  routers:
+    frontend-router:
+      rule: "PathPrefix(`/`)"
+      service: frontend-service
+      middlewares:
+        - "retry-middleware"
+    aaa-router:
+      rule: "PathPrefix(`/api/aaa`)"
+      service: aaa-service
+      middlewares:
+        - "retry-middleware"
+        - "api-aaa-strip-prefix-middleware"
+    mortgage-application-router:
+      rule: "PathPrefix(`/api/mortgage-application`)"
+      service: mortgage-application-service
+      middlewares:
+        - "auth-middleware"
+        - "api-strip-prefix-middleware"
+        - "retry-middleware"
+
+  middlewares:
+    api-strip-prefix-middleware:
+      stripPrefix:
+        prefixes:
+          - "/api"
+    api-aaa-strip-prefix-middleware:
+      stripPrefix:
+        prefixes:
+          - "/api/aaa"
+    retry-middleware:
+      retry:
+        attempts: 4
+    auth-middleware:
+      forwardAuth:
+        address: "http://host.docker.internal:4433/sessions/whoami"
+        authRequestHeaders:
+          - "Cookie"
+        authResponseHeadersRegex: "^X-Auth-"
