@@ -11,7 +11,7 @@ import { Configuration, V0alpha2Api } from '@ory/kratos-client'
 import config from '../config'
 import { NextFunction, Request, Response } from 'express'
 import urljoin from 'url-join'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 const kratos = new V0alpha2Api(
   new Configuration({ basePath: config.kratos.public })
@@ -20,7 +20,9 @@ const kratos = new V0alpha2Api(
 export default (req: Request, res: Response, next: NextFunction) => {
   kratos
     .toSession(undefined, req.header('Cookie'))
-    .then(({ data: session }) => {
+    .then((obj: AxiosResponse) => {
+      const session = obj.data;
+      console.log("data", session, "headers", obj.headers);
       // `whoami` returns the session or an error. We're changing the type here
       // because express-session is not detected by TypeScript automatically.
       ;(req as Request & { user: any }).user = { session }
