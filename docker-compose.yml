@@ -71,6 +71,18 @@ services:
       - kratos-postgresql
     command: migrate sql -e -y
 
+  kratos-selfservice-ui-node:
+    image: oryd/kratos-selfservice-ui-node:v0.7.4-alpha.1
+    environment:
+      - KRATOS_PUBLIC_URL=http://kratos:4433/
+      - KRATOS_ADMIN_URL=http://kratos:4434/
+      - PORT=4455
+      - SECURITY_MODE=cookie
+      - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+    restart: on-failure
+    ports:
+      - "4455:4455"
+
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
