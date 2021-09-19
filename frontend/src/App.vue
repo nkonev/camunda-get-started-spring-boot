@@ -86,7 +86,9 @@
                 this.$data.drawer = !this.$data.drawer;
             },
             logout(){
-                window.location.href = '/api/aaa-self-service';
+                axios.get("/api/aaa-backend/self-service/logout/browser").then(value => {
+                    window.location.href = value.data.logout_url;
+                });
             },
             goHome() {
                 this.$router.push(({ name: mortgage_application_name}))
