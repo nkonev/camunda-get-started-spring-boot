@@ -40,14 +40,14 @@ http:
       service: mortgage-application-service
       middlewares:
         - "auth-middleware"
-        - "api-strip-prefix-middleware"
+        - "mortgage-application-strip-prefix-middleware"
         - "retry-middleware"
 
   middlewares:
-    api-strip-prefix-middleware:
+    mortgage-application-strip-prefix-middleware:
       stripPrefix:
         prefixes:
-          - "/api"
+          - "/api/mortgage-application"
     api-kratos-strip-prefix-middleware:
       stripPrefix:
         prefixes:

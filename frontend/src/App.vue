@@ -9,13 +9,9 @@
         >
             <template v-slot:prepend>
                 <v-list-item two-line v-if="currentUser">
-                    <v-list-item-avatar  v-if="currentUser.avatar">
-                        <img :src="currentUserAvatar"/>
-                    </v-list-item-avatar>
-
                     <v-list-item-content>
-                        <v-list-item-title>{{currentUser.login}}</v-list-item-title>
-                        <v-list-item-subtitle>Logged In</v-list-item-subtitle>
+                        <v-list-item-title>{{currentUserLogin}}</v-list-item-title>
+                        <v-list-item-subtitle>{{currentUserEmail}}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
             </template>
@@ -53,9 +49,6 @@
 
         <v-main>
             <v-container fluid class="ma-0 pa-0">
-
-                <LoginModal/>
-
                 <router-view :key="`routerView`+`${$route.params.id}`"/>
             </v-container>
         </v-main>
@@ -65,7 +58,6 @@
 <script>
     import 'typeface-roboto'
     import axios from 'axios';
-    import LoginModal from "./LoginModal";
     import {mapGetters} from 'vuex'
     import {
         FETCH_USER_PROFILE,
@@ -75,10 +67,8 @@
     import bus, {
         LOGGED_OUT,
     } from "./bus";
-    import {profile_self_name, chat_list_name} from "./routes";
+    import {mortgage_application_name} from "./routes";
     import SimpleModal from "./SimpleModal";
-    import ChooseAvatar from "./ChooseAvatar";
-    import {getCorrectUserAvatar} from "./utils";
 
     export default {
         data () {
@@ -94,26 +84,20 @@
             }
         },
         components:{
-            LoginModal,
             SimpleModal,
-            ChooseAvatar,
         },
         methods:{
             toggleLeftNavigation() {
                 this.$data.drawer = !this.$data.drawer;
             },
             logout(){
-                console.log("Logout");
-                axios.post(`/api/logout`).then(({ data }) => {
-                    this.$store.commit(UNSET_USER);
-                    // TODO redirect
-                });
+                window.location.href = '/api/aaa-self-service';
             },
             goHome() {
-                this.$router.push(({ name: chat_list_name}))
+                this.$router.push(({ name: mortgage_application_name}))
             },
             goProfile() {
-                this.$router.push(({ name: profile_self_name}))
+                window.location.href = '/api/aaa-self-service/settings';
             },
             getAppBarItems(){
                 return this.appBarItems.filter((value, index) => {
@@ -135,9 +119,13 @@
             ...mapGetters({
                 currentUser: GET_USER,
             }), // currentUser is here, 'getUser' -- in store.js
-            currentUserAvatar() {
-                return getCorrectUserAvatar(this.currentUser.avatar);
+            currentUserLogin() {
+                const name = this.$store.getters[GET_USER].traits.name;
+                return name.first + ' ' + name.last;
             },
+            currentUserEmail() {
+                return this.$store.getters[GET_USER].traits.email;
+            }
         },
         mounted() {
             this.$store.dispatch(FETCH_USER_PROFILE);
@@ -158,15 +146,4 @@
       margin-bottom: 0px !important;
     }
 
-</style>
-
-<style scoped lang="stylus">
-    .call-blink {
-        animation: blink 0.5s;
-        animation-iteration-count: 5;
-    }
-
-    @keyframes blink {
-        50% { opacity: 10% }
-    }
 </style>

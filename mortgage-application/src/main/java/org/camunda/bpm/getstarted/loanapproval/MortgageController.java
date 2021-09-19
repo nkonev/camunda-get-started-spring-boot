@@ -1,14 +1,12 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/mortgage-application")
+@RequestMapping("/api/mortgage-application")
 public class MortgageController {
 
     private static final String USER_ID_HEADER = "X-USER-ID";
