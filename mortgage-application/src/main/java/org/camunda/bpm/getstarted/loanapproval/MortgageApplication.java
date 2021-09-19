@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public class MortgageApplication {
     private UUID id;
     private UUID userId;
     private String property;
+    private BigDecimal price;
     @CreatedDate
     private Instant createdDateTime;
 
@@ -43,6 +45,7 @@ public class MortgageApplication {
         ret.setProperty(this.property);
         ret.setUserId(this.userId);
         ret.setCreatedDateTime(this.createdDateTime);
+        ret.setPrice(this.price);
         return ret;
     }
 
@@ -62,4 +65,11 @@ public class MortgageApplication {
         this.createdDateTime = createdDateTime;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 }

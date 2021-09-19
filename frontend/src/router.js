@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {mortgage_application_name, root } from "./routes";
+import {mortgage_application_create_name, mortgage_application_name, root} from "./routes";
 import Error404 from "./Error404";
 import MortgageApplicationView from "./MortgageApplicationView";
 

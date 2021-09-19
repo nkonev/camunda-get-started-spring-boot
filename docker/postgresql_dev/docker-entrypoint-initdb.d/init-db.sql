@@ -28,5 +28,6 @@ create table mortgage_application (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
     property TEXT,
+    price DECIMAL,
     created_date_time TIMESTAMP NOT NULL
 );

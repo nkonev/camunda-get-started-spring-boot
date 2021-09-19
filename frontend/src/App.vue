@@ -62,11 +62,7 @@
     import {
         FETCH_USER_PROFILE,
         GET_USER,
-        UNSET_USER
     } from "./store";
-    import bus, {
-        LOGGED_OUT,
-    } from "./bus";
     import {mortgage_application_name} from "./routes";
     import SimpleModal from "./SimpleModal";
 
@@ -74,10 +70,9 @@
         data () {
             return {
                 appBarItems: [
-                    { title: 'Form data', icon: 'mdi-home-city', clickFunction: this.goHome, requireAuthenticated: false },
-
+                    { title: 'Mortgage application', icon: 'mdi-home-city', clickFunction: this.goHome, requireAuthenticated: false },
+                    { title: 'Participants', icon: 'mdi-human-queue', clickFunction: this.goHome, requireAuthenticated: false },
                     { title: 'My Account', icon: 'mdi-account', clickFunction: this.goProfile, requireAuthenticated: true },
-
                     { title: 'Logout', icon: 'mdi-logout', clickFunction: this.logout, requireAuthenticated: true },
                 ],
                 drawer: this.$vuetify.breakpoint.lgAndUp,

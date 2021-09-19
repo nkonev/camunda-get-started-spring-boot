@@ -2,6 +2,7 @@ package org.camunda.bpm.getstarted.loanapproval;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ class MortgageAppDto {
     private UUID id;
     private UUID userId;
     private String property;
+    private BigDecimal price;
     private Instant createdDateTime;
 
     public MortgageAppDto() {
@@ -36,6 +38,7 @@ class MortgageAppDto {
         ret.setProperty(this.property);
         ret.setUserId(userId);
         ret.setCreatedDateTime(this.createdDateTime);
+        ret.setPrice(this.price);
         return ret;
     }
 
@@ -53,5 +56,13 @@ class MortgageAppDto {
 
     public void setCreatedDateTime(Instant createdDateTime) {
         this.createdDateTime = createdDateTime;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }
