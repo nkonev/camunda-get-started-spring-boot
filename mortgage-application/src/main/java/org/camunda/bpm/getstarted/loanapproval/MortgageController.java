@@ -1,6 +1,10 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -9,7 +13,9 @@ import java.util.UUID;
 @RequestMapping("/api/mortgage-application")
 public class MortgageController {
 
-    private static final String USER_ID_HEADER = "X-USER-ID";
+    private static final String USER_ID_HEADER = "x-kratos-authenticated-identity-id";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MortgageController.class);
 
     @Autowired
     private MortgageApplicationRepository mortgageApplicationRepository;

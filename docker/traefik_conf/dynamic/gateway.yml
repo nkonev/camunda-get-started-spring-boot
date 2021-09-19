@@ -40,14 +40,9 @@ http:
       service: mortgage-application-service
       middlewares:
         - "auth-middleware"
-        - "mortgage-application-strip-prefix-middleware"
         - "retry-middleware"
 
   middlewares:
-    mortgage-application-strip-prefix-middleware:
-      stripPrefix:
-        prefixes:
-          - "/api/mortgage-application"
     api-kratos-strip-prefix-middleware:
       stripPrefix:
         prefixes:
@@ -64,4 +59,5 @@ http:
         address: "http://host.docker.internal:4433/sessions/whoami"
         authRequestHeaders:
           - "Cookie"
-        authResponseHeadersRegex: "^x-kratos-"
+        authResponseHeaders:
+          - "x-kratos-authenticated-identity-id"
