@@ -74,7 +74,7 @@
             this.errored = false;
             axios.get('/api/mortgage-application').then(value => {
                 let resp = value.data
-                if (resp == {} || !resp) {
+                if (!resp) {
                   resp = factory();
                 }
                 this.currentApp = resp;
