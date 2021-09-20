@@ -24,13 +24,13 @@ http:
       middlewares:
         - "retry-middleware"
     kratos-backend-router:
-      rule: "PathPrefix(`/api/aaa-backend`)"
+      rule: "PathPrefix(`/api/aaa-customer-backend`)"
       service: kratos-backend-service
       middlewares:
         - "retry-middleware"
         - "api-kratos-strip-prefix-middleware"
     kratos-kratos-self-service-router:
-      rule: "PathPrefix(`/api/aaa-self-service`)"
+      rule: "PathPrefix(`/api/aaa-customer-self-service`)"
       service: kratos-self-service-ui-service
       middlewares:
         - "retry-middleware"
@@ -46,11 +46,11 @@ http:
     api-kratos-strip-prefix-middleware:
       stripPrefix:
         prefixes:
-          - "/api/aaa-backend"
+          - "/api/aaa-customer-backend"
     api-kratos-self-strip-prefix-middleware:
       stripPrefix:
         prefixes:
-          - "/api/aaa-self-service"
+          - "/api/aaa-customer-self-service"
     retry-middleware:
       retry:
         attempts: 4

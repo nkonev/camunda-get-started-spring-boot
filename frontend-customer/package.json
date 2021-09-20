@@ -1,5 +1,5 @@
 {
-  "name": "mortgage-application-frontend",
+  "name": "mortgage-application-frontend-customer",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
@@ -22,7 +22,7 @@
     "dev": "webpack --mode development --watch",
     "profile": "webpack --mode development --progress profile",
     "build": "webpack --mode production",
-    "clean": "rm -rf ../frontend-nginx/build"
+    "clean": "rm -rf ../frontend-nginx-customer/build"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

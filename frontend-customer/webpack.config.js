@@ -7,7 +7,7 @@ const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const contentStaticDest = path.join(__dirname, "../frontend-nginx");
+const contentStaticDest = path.join(__dirname, "../frontend-nginx-customer");
 const contentBase = path.join(contentStaticDest, "/build");
 
 const LIVE_RELOAD_PORT = 35738

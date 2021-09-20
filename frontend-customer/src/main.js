@@ -7,6 +7,7 @@ import bus, {
 } from './bus';
 import store, {UNSET_USER} from './store'
 import router from './router.js'
+import {apiAaaSelfService} from "./utils";
 
 axios.interceptors.response.use((response) => {
   return response
@@ -18,7 +19,7 @@ axios.interceptors.response.use((response) => {
   } else if (error && error.response && error.response.status == 401) {
     console.log("Catch 401 Unauthorized, emitting ", LOGGED_OUT);
     store.commit(UNSET_USER);
-    window.location.href = '/api/aaa-self-service/auth/login';
+    window.location.href = `${apiAaaSelfService}/auth/login`;
     return Promise.reject(error)
   } else {
     const consoleErrorMessage  = "Request: " + JSON.stringify(error.config) + ", Response: " + JSON.stringify(error.response);

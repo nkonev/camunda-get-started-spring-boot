@@ -31,8 +31,3 @@ accessLog:
       names:
         User-Agent: keep
         X-B3-Traceid: keep
-tracing:
-  spanNameLimit: 150
-  jaeger:
-    gen128Bit: true
-    localAgentHostPort: host.docker.internal:6831

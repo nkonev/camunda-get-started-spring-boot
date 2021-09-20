@@ -65,6 +65,7 @@
     } from "./store";
     import {mortgage_application_name} from "./routes";
     import SimpleModal from "./SimpleModal";
+    import {apiAaaBackend, apiAaaSelfService} from "./utils";
 
     export default {
         data () {
@@ -86,7 +87,7 @@
                 this.$data.drawer = !this.$data.drawer;
             },
             logout(){
-                axios.get("/api/aaa-backend/self-service/logout/browser").then(value => {
+                axios.get(`${apiAaaBackend}/self-service/logout/browser`).then(value => {
                     window.location.href = value.data.logout_url;
                 });
             },
@@ -94,7 +95,7 @@
                 this.$router.push(({ name: mortgage_application_name}))
             },
             goProfile() {
-                window.location.href = '/api/aaa-self-service/settings';
+                window.location.href = `${apiAaaSelfService}/settings`;
             },
             getAppBarItems(){
                 return this.appBarItems.filter((value, index) => {

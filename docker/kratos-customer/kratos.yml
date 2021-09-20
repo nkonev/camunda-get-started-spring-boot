@@ -4,11 +4,11 @@ dsn: memory
 
 serve:
   public:
-    base_url: http://127.0.0.1:8083/api/aaa-backend
+    base_url: http://127.0.0.1:8083/api/aaa-customer-backend
     cors:
       enabled: true
   admin:
-    base_url: http://kratos:4434/
+    base_url: http://kratos-customer:4434/
 
 selfservice:
   default_browser_return_url: http://127.0.0.1:8083/
@@ -21,33 +21,33 @@ selfservice:
 
   flows:
     error:
-      ui_url: http://127.0.0.1:8083/api/aaa-self-service/error
+      ui_url: http://127.0.0.1:8083/api/aaa-customer-self-service/error
 
     settings:
-      ui_url: http://127.0.0.1:8083/api/aaa-self-service/settings
+      ui_url: http://127.0.0.1:8083/api/aaa-customer-self-service/settings
       privileged_session_max_age: 15m
 
     recovery:
       enabled: true
-      ui_url: http://127.0.0.1:8083/api/aaa-self-service/recovery
+      ui_url: http://127.0.0.1:8083/api/aaa-customer-self-service/recovery
 
     verification:
       enabled: true
-      ui_url: http://127.0.0.1:8083/api/aaa-self-service/verify
+      ui_url: http://127.0.0.1:8083/api/aaa-customer-self-service/verify
       after:
         default_browser_return_url: http://127.0.0.1:8083/
 
     logout:
       after:
-        default_browser_return_url: http://127.0.0.1:8083/api/aaa-self-service/auth/login
+        default_browser_return_url: http://127.0.0.1:8083/api/aaa-customer-self-service/auth/login
 
     login:
-      ui_url: http://127.0.0.1:8083/api/aaa-self-service/auth/login
+      ui_url: http://127.0.0.1:8083/api/aaa-customer-self-service/auth/login
       lifespan: 10m
 
     registration:
       lifespan: 10m
-      ui_url: http://127.0.0.1:8083/api/aaa-self-service/auth/registration
+      ui_url: http://127.0.0.1:8083/api/aaa-customer-self-service/auth/registration
       after:
         password:
           hooks:

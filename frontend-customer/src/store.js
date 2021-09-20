@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
+import {apiAaaBackend} from "./utils";
 
 Vue.use(Vuex);
 
@@ -28,7 +29,7 @@ const store = new Vuex.Store({
     },
     actions: {
         [FETCH_USER_PROFILE](context) {
-            axios.get(`/api/aaa-backend/sessions/whoami`).then(( {data} ) => {
+            axios.get(`${apiAaaBackend}/sessions/whoami`).then(( {data} ) => {
                 console.debug("fetched profile =", data);
                 context.commit(SET_USER, data.identity);
             });

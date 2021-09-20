@@ -21,6 +21,6 @@ hs_err_pid*
 .settings
 .project
 
-/frontend-nginx/
+/frontend-nginx-customer/
 node_modules
 target
