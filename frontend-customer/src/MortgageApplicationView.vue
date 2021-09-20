@@ -15,7 +15,7 @@
                 v-model="currentApp.property"
                 :rules="[rules.min, rules.required]"
                 label="Address"
-                @keyup.native.enter="createApp()"
+                @keyup.native.enter="saveApp()"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -30,7 +30,7 @@
                 v-model="currentApp.price"
                 :rules="[rules.required]"
                 label="Price"
-                @keyup.native.enter="createApp()"
+                @keyup.native.enter="saveApp()"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -38,7 +38,7 @@
     </v-row>
     </v-card-text>
     <v-card-actions>
-      <v-btn @click="createApp()" class="primary" :loading="saving">Save</v-btn>
+      <v-btn @click="saveApp()" class="primary" :loading="saving">Save</v-btn>
     </v-card-actions>
   </v-card>
 
@@ -47,7 +47,6 @@
 <script>
 
     import axios from "axios";
-    import { mortgage_application_name} from "@/routes";
 
     const factory = () => {
         return {
@@ -85,17 +84,28 @@
             })
         },
         methods: {
-          createApp() {
+          saveApp() {
             this.saving = true;
             this.loading = true;
-            axios.post('/api/mortgage-application', this.currentApp)
+
+            let promise;
+            if (this.currentApp.id) {
+              promise = axios.patch('/api/mortgage-application', this.currentApp)
+            } else {
+              promise = axios.post('/api/mortgage-application', this.currentApp)
+            }
+            promise
+                .then(value => {
+                  this.currentApp = value.data;
+                })
+                .catch(reason => {
+                  this.errored = true;
+                })
                 .finally(() => {
-              this.saving = false;
-              this.loading = false;
-            })
-
-          }
-
+                  this.saving = false;
+                  this.loading = false;
+                })
+          },
         }
     }
 </script>

@@ -25,6 +25,11 @@ public class MortgageController {
         return mortgageApplicationRepository.save(createDto.toEntityForCreate(UUID.fromString(userId))).toDto();
     }
 
+    @PatchMapping
+    public MortgageAppDto update(@RequestHeader(USER_ID_HEADER)String userId, @RequestBody MortgageAppDto createDto) {
+        return mortgageApplicationRepository.save(createDto.toEntityForUpdate(UUID.fromString(userId))).toDto();
+    }
+
     @GetMapping
     public MortgageAppDto get(@RequestHeader(USER_ID_HEADER)String userId) {
         return mortgageApplicationRepository.findLastActual(UUID.fromString(userId)).map(

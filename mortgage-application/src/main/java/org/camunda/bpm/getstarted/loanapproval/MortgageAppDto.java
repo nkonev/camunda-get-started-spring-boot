@@ -42,6 +42,17 @@ class MortgageAppDto {
         return ret;
     }
 
+    @JsonIgnore
+    public MortgageApplication toEntityForUpdate(UUID userId) {
+        var ret = new MortgageApplication();
+        ret.setProperty(this.property);
+        ret.setUserId(userId);
+        ret.setCreatedDateTime(this.createdDateTime);
+        ret.setPrice(this.price);
+        ret.setId(this.id);
+        return ret;
+    }
+
     public UUID getUserId() {
         return userId;
     }
