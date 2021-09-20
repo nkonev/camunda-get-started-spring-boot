@@ -10,7 +10,7 @@
     <v-row no-gutters>
       <v-col cols="12">
         <v-row :align="'center'" no-gutters>
-          <v-col class="mx-4">
+          <v-col>
             <v-text-field
                 v-model="currentApp.property"
                 :rules="[rules.min, rules.required]"
@@ -25,7 +25,7 @@
     <v-row no-gutters>
       <v-col cols="12" >
         <v-row :align="'center'" no-gutters>
-          <v-col class="mx-4">
+          <v-col>
             <v-text-field
                 v-model="currentApp.price"
                 :rules="[rules.required]"
