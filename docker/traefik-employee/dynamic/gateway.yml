@@ -1,0 +1,63 @@
+http:
+  services:
+    frontend-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:9084
+    kratos-backend-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:4933
+    kratos-self-service-ui-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:4955
+    mortgage-application-service:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:8066
+
+  routers:
+    frontend-router:
+      rule: "PathPrefix(`/`)"
+      service: frontend-service
+      middlewares:
+        - "retry-middleware"
+    kratos-backend-router:
+      rule: "PathPrefix(`/api/aaa-employee-backend`)"
+      service: kratos-backend-service
+      middlewares:
+        - "retry-middleware"
+        - "api-kratos-strip-prefix-middleware"
+    kratos-kratos-self-service-router:
+      rule: "PathPrefix(`/api/aaa-employee-self-service`)"
+      service: kratos-self-service-ui-service
+      middlewares:
+        - "retry-middleware"
+        - "api-kratos-self-strip-prefix-middleware"
+    mortgage-application-router:
+      rule: "PathPrefix(`/api/mortgage-application`)"
+      service: mortgage-application-service
+      middlewares:
+        - "auth-middleware"
+        - "retry-middleware"
+
+  middlewares:
+    api-kratos-strip-prefix-middleware:
+      stripPrefix:
+        prefixes:
+          - "/api/aaa-employee-backend"
+    api-kratos-self-strip-prefix-middleware:
+      stripPrefix:
+        prefixes:
+          - "/api/aaa-employee-self-service"
+    retry-middleware:
+      retry:
+        attempts: 4
+    auth-middleware:
+      forwardAuth:
+        address: "http://host.docker.internal:4933/sessions/whoami"
+        authRequestHeaders:
+          - "Cookie"
+        authResponseHeaders:
+          - "x-kratos-authenticated-identity-id"
