@@ -1,6 +1,6 @@
 <template>
   <v-card :disabled="loading">
-    <v-card-title class="title pb-0 pt-1">Application</v-card-title>
+    <v-card-title class="title pb-0 pt-1" v-text="appExists ? 'Current application' : 'New application'"></v-card-title>
     <v-alert
         class="mx-4"
         type="error"
@@ -39,6 +39,7 @@
     </v-card-text>
     <v-card-actions>
       <v-btn @click="saveApp()" class="primary" :loading="saving">Save</v-btn>
+      <v-btn v-if="appExists" @click="deleteApp()" class="warning" :loading="saving">Cancel</v-btn>
     </v-card-actions>
   </v-card>
 
@@ -83,6 +84,11 @@
               this.loading = false;
             })
         },
+        computed: {
+          appExists() {
+            return this.currentApp.id;
+          }
+        },
         methods: {
           saveApp() {
             this.saving = true;
@@ -106,6 +112,23 @@
                   this.loading = false;
                 })
           },
+          deleteApp() {
+            this.saving = true;
+            this.loading = true;
+
+            axios.delete('/api/mortgage-application/' + this.currentApp.id)
+                .then(value => {
+                  this.currentApp = factory();
+                })
+                .catch(reason => {
+                  this.errored = true;
+                })
+                .finally(() => {
+                  this.saving = false;
+                  this.loading = false;
+                })
+
+          }
         }
     }
 </script>

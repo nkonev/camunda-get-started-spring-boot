@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0vudt52" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.10.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0vudt52" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.10.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
   <bpmn:process id="mortgageProcessId" name="mortgageName" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="создана заявка">
       <bpmn:outgoing>Flow_1ixln4l</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:endEvent id="Event_1071vyw" name="выдача ипотеки">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${mortgageIssued}" event="start" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1t3sqhf</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1ixln4l" sourceRef="StartEvent_1" targetRef="Activity_0y54hdf" />
     <bpmn:sequenceFlow id="Flow_0616ex8" sourceRef="Activity_0ranavd" targetRef="Activity_0wropab" />
     <bpmn:sequenceFlow id="Flow_1t3sqhf" sourceRef="Activity_0wropab" targetRef="Event_1071vyw" />
     <bpmn:userTask id="Activity_0ranavd" name="полный скоринг">
-      <bpmn:incoming>Flow_1b7cz3w</bpmn:incoming>
+      <bpmn:incoming>Flow_1av22a4</bpmn:incoming>
       <bpmn:outgoing>Flow_0616ex8</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Activity_0wropab" name="проверка залога если есть">
@@ -19,15 +22,27 @@
       <bpmn:outgoing>Flow_1t3sqhf</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="Activity_0y54hdf" name="прескорниг" camunda:delegateExpression="${prescoringService}">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:outputParameter name="prescoringSuccess" />
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1ixln4l</bpmn:incoming>
-      <bpmn:outgoing>Flow_1b7cz3w</bpmn:outgoing>
+      <bpmn:outgoing>Flow_07ukcsq</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1b7cz3w" sourceRef="Activity_0y54hdf" targetRef="Activity_0ranavd" />
+    <bpmn:exclusiveGateway id="Gateway_1rmb3e1">
+      <bpmn:incoming>Flow_07ukcsq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1av22a4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_03ucji0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_07ukcsq" sourceRef="Activity_0y54hdf" targetRef="Gateway_1rmb3e1" />
+    <bpmn:sequenceFlow id="Flow_1av22a4" name="yes" sourceRef="Gateway_1rmb3e1" targetRef="Activity_0ranavd">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${prescoringSuccess == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_10y52le" name="отказ на прескоринге">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${mortgageRejectedOnPrescoring}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_03ucji0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_03ucji0" name="no" sourceRef="Gateway_1rmb3e1" targetRef="Event_10y52le">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${prescoringSuccess == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="mortgageProcessId">
@@ -43,9 +58,24 @@
         <di:waypoint x="215" y="117" />
         <di:waypoint x="310" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1b7cz3w_di" bpmnElement="Flow_1b7cz3w">
+      <bpmndi:BPMNEdge id="Flow_07ukcsq_di" bpmnElement="Flow_07ukcsq">
         <di:waypoint x="410" y="117" />
+        <di:waypoint x="485" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1av22a4_di" bpmnElement="Flow_1av22a4">
+        <di:waypoint x="535" y="117" />
         <di:waypoint x="600" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="559" y="99" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03ucji0_di" bpmnElement="Flow_03ucji0">
+        <di:waypoint x="510" y="142" />
+        <di:waypoint x="510" y="350" />
+        <di:waypoint x="1022" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="519" y="243" width="13" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
@@ -66,6 +96,15 @@
         <dc:Bounds x="1022" y="99" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1000" y="142" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1rmb3e1_di" bpmnElement="Gateway_1rmb3e1" isMarkerVisible="true">
+        <dc:Bounds x="485" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10y52le_di" bpmnElement="Event_10y52le">
+        <dc:Bounds x="1022" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1010" y="375" width="63" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

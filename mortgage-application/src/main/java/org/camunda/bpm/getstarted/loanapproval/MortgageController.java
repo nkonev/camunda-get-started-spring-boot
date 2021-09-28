@@ -28,7 +28,7 @@ public class MortgageController {
     public MortgageAppDto create(@RequestHeader(USER_ID_HEADER)String userId, @RequestBody MortgageAppDto createDto) {
         final MortgageAppDto returnDto = mortgageApplicationRepository.save(createDto.toEntityForCreate(UUID.fromString(userId))).toDto();
 
-        final ProcessInstance mortgageProcessInstance = processEngine.getRuntimeService().startProcessInstanceByKey(MORTGAGE_PROCESS, Map.of(PROCESS_VARIABLE_APP_ID, returnDto.getId()));
+        final ProcessInstance mortgageProcessInstance = processEngine.getRuntimeService().startProcessInstanceByKey(MORTGAGE_PROCESS, Map.of(PROCESS_VARIABLE_APP_ID, returnDto.getId(), PRESCORING_SUCCESS, false));
         LOGGER.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
         return returnDto;
     }

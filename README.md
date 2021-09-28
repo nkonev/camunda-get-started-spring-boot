@@ -41,15 +41,6 @@ cd bff
 npm run start
 ```
 
-# Ask BFF
-```
-http://127.0.0.1:4455/dashboard
-```
-
-# Open web
-```
-http://localhost:8080/camunda
-```
 
 # Create app
 ```
@@ -70,6 +61,12 @@ npm --version
 node --version
 v15.11.0
 ```
+
+# Open camunda
+```
+http://localhost:8066
+```
+demo/demo
 
 # Open employee workspace
 http://127.0.0.1:9083
