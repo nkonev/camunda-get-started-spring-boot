@@ -1,10 +1,12 @@
 camunda.bpm:
   admin-user:
-    id: demo
-    password: demo
-    firstName: Demo
+    id: admin
+    password: admin
+    firstName: Admin
   filter:
     create: All tasks
+  authorization:
+    enabled: true
 
 spring.datasource:
   # https://jdbc.postgresql.org/documentation/head/connect.html#connection-parameters
