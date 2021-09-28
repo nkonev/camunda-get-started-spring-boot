@@ -70,3 +70,9 @@ npm --version
 node --version
 v15.11.0
 ```
+
+# Open employee workspace
+http://127.0.0.1:9083
+
+# Open customer workspace
+http://127.0.0.1:8083
