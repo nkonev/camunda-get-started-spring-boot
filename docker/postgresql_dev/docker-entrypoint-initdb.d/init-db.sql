@@ -29,5 +29,6 @@ create table mortgage_application (
     user_id UUID NOT NULL,
     property TEXT,
     price DECIMAL,
+    status VARCHAR(128) NOT NULL,
     created_date_time TIMESTAMP NOT NULL
 );

@@ -29,4 +29,4 @@ custom.stomp.broker:
 
 logging:
   level:
-    org.springframework.messaging: trace
+    org.springframework.messaging: info

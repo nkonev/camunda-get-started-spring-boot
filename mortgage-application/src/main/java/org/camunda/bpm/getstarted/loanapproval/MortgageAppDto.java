@@ -11,6 +11,7 @@ class MortgageAppDto {
     private UUID userId;
     private String property;
     private BigDecimal price;
+    private MortgageApplicationStatus status;
     private Instant createdDateTime;
 
     public MortgageAppDto() {
@@ -39,6 +40,9 @@ class MortgageAppDto {
         ret.setUserId(userId);
         ret.setCreatedDateTime(this.createdDateTime);
         ret.setPrice(this.price);
+        if (this.status != null) {
+            ret.setStatus(this.status);
+        }
         return ret;
     }
 
@@ -50,6 +54,9 @@ class MortgageAppDto {
         ret.setCreatedDateTime(this.createdDateTime);
         ret.setPrice(this.price);
         ret.setId(this.id);
+        if (this.status != null) {
+            ret.setStatus(this.status);
+        }
         return ret;
     }
 
@@ -75,5 +82,13 @@ class MortgageAppDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public MortgageApplicationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MortgageApplicationStatus status) {
+        this.status = status;
     }
 }

@@ -6,41 +6,60 @@
         type="error"
         v-if = "errored"
     >An error occurred</v-alert>
-    <v-card-text v-else>
-    <v-row no-gutters>
-      <v-col cols="12">
-        <v-row :align="'center'" no-gutters>
-          <v-col>
-            <v-text-field
-                v-model="currentApp.property"
-                :rules="[rules.min, rules.required]"
-                label="Address"
-                @keyup.native.enter="saveApp()"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
+    <template v-else>
+      <v-alert
+          class="mx-4"
+          type="success"
+          v-if = "currentApp.status == 'COMPLETED'"
+      >Mortgage issued</v-alert>
+      <v-alert
+          class="mx-4"
+          type="warning"
+          v-if = "currentApp.status == 'PRESCORING_FAILED'"
+      >Prescoring rejected</v-alert>
 
-    <v-row no-gutters>
-      <v-col cols="12" >
-        <v-row :align="'center'" no-gutters>
-          <v-col>
-            <v-text-field
-                v-model="currentApp.price"
-                :rules="[rules.required]"
-                label="Price"
-                @keyup.native.enter="saveApp()"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn @click="saveApp()" class="primary" :loading="saving">Save</v-btn>
-      <v-btn v-if="appExists" @click="deleteApp()" class="warning" :loading="saving">Cancel</v-btn>
-    </v-card-actions>
+      <v-card-text v-if="canCreateNewApp">
+        <v-btn @click="createNewApp()" class="primary">Create new application</v-btn>
+      </v-card-text>
+      <template v-else>
+        <v-card-text>
+          <v-row no-gutters>
+            <v-col cols="12">
+              <v-row :align="'center'" no-gutters>
+                <v-col>
+                  <v-text-field
+                      v-model="currentApp.property"
+                      :rules="[rules.min, rules.required]"
+                      label="Address"
+                      @keyup.native.enter="saveApp()"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col cols="12" >
+              <v-row :align="'center'" no-gutters>
+                <v-col>
+                  <v-text-field
+                      v-model="currentApp.price"
+                      :rules="[rules.required]"
+                      label="Price"
+                      @keyup.native.enter="saveApp()"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="saveApp()" class="primary" :loading="saving">Save</v-btn>
+          <v-btn v-if="appExists" @click="sendAppToCamunda()" class="primary" :loading="saving">Send</v-btn>
+          <v-btn v-if="appExists" @click="deleteApp()" class="warning" :loading="saving">Cancel</v-btn>
+        </v-card-actions>
+      </template>
+    </template>
   </v-card>
 
 </template>
@@ -92,8 +111,12 @@
                 // translated on server side by UserDestinationMessageHandler, DefaultUserDestinationResolver
                 subscriptionApplicationStatusUpdate=stompObj.stompClient.subscribe("/user/queue/mortgage.application.status.update", (data) => {
                   const message = data.body;
-                  const obj = JSON.parse(message);
                   console.log(message);
+                  const obj = JSON.parse(message);
+                  // if (obj.status === "COMPLETED") {
+                  //
+                  // }
+                  this.currentApp = obj;
                 });
           });
         },
@@ -107,9 +130,16 @@
         computed: {
           appExists() {
             return this.currentApp.id;
+          },
+          canCreateNewApp() {
+            return this.currentApp.status == 'COMPLETED' || this.currentApp.status == 'PRESCORING_FAILED' || this.currentApp.status == 'USER_CANCELED';
           }
         },
         methods: {
+          createNewApp() {
+            this.currentApp = factory();
+            this.saveApp();
+          },
           saveApp() {
             this.saving = true;
             this.loading = true;
@@ -131,6 +161,9 @@
                   this.saving = false;
                   this.loading = false;
                 })
+          },
+          sendAppToCamunda() {
+            axios.put('/api/mortgage-application/send/' + this.currentApp.id)
           },
           deleteApp() {
             this.saving = true;

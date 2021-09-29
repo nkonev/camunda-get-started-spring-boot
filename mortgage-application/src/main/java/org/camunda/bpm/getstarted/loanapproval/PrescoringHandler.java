@@ -5,7 +5,6 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -36,7 +35,6 @@ public class PrescoringHandler implements JavaDelegate {
             logger.info("Заявка {} подозрительна и не прошла прескоринг", mortgageApplication.getId());
             execution.setVariable(PRESCORING_SUCCESS, false);
         }
-
         webSocketService.sendStatusUpdate(mortgageApplication.getUserId(), mortgageApplication.toDto());
     }
 }

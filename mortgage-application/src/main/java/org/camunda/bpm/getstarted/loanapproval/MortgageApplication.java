@@ -16,6 +16,7 @@ public class MortgageApplication {
     private UUID userId;
     private String property;
     private BigDecimal price;
+    private MortgageApplicationStatus status = MortgageApplicationStatus.NEW;
     @CreatedDate
     private Instant createdDateTime;
 
@@ -46,6 +47,7 @@ public class MortgageApplication {
         ret.setUserId(this.userId);
         ret.setCreatedDateTime(this.createdDateTime);
         ret.setPrice(this.price);
+        ret.setStatus(this.status);
         return ret;
     }
 
@@ -71,5 +73,13 @@ public class MortgageApplication {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public MortgageApplicationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MortgageApplicationStatus status) {
+        this.status = status;
     }
 }

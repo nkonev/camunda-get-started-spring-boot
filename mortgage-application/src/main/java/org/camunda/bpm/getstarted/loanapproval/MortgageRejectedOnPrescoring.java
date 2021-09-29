@@ -27,7 +27,9 @@ public class MortgageRejectedOnPrescoring implements JavaDelegate {
         UUID appId = (UUID) execution.getVariable(PROCESS_VARIABLE_APP_ID);
 
         mortgageApplicationRepository.findById(appId).ifPresent(mortgageApplication -> {
-            webSocketService.sendStatusUpdate(mortgageApplication.getUserId(), mortgageApplication.toDto());
+            mortgageApplication.setStatus(MortgageApplicationStatus.PRESCORING_FAILED);
+            final MortgageApplication saved = mortgageApplicationRepository.save(mortgageApplication);
+            webSocketService.sendStatusUpdate(saved.getUserId(), saved.toDto());
         });
 
         logger.info("Заявка отклонена {} на прескоринге", appId);
