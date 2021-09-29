@@ -26,3 +26,7 @@ custom.stomp.broker:
   client-password: mortgagePazZw0rd
   system-login: mortgage
   system-password: mortgagePazZw0rd
+
+logging:
+  level:
+    org.springframework.messaging: trace

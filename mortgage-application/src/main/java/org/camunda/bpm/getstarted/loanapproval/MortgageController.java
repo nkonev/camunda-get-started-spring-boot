@@ -17,7 +17,7 @@ import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.*;
 @RequestMapping("/api/mortgage-application")
 public class MortgageController {
 
-    private static final String USER_ID_HEADER = "x-kratos-authenticated-identity-id";
+    public static final String USER_ID_HEADER = "x-kratos-authenticated-identity-id";
 
     private static final Logger logger = LoggerFactory.getLogger(MortgageController.class);
 

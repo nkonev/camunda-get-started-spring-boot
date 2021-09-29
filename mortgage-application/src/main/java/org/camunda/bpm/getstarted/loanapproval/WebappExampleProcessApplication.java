@@ -18,11 +18,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.List;
 
 import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.MORTGAGE_PROCESS;
 
+@EnableScheduling
 @EnableJdbcAuditing
 @EnableJdbcRepositories
 @SpringBootApplication

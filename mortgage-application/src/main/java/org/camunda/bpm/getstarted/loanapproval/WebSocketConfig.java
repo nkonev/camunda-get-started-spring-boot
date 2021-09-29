@@ -9,6 +9,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 // https://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html#websocket-server
+// We need to authenticate StandardWebSocketSession in AbstractStandardUpgradeStrategy#upgrade, or in AbstractHandshakeHandler#doHandshake
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -110,3 +111,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
 }
+
