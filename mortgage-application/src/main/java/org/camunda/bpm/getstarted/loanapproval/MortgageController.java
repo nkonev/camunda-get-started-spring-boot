@@ -1,5 +1,6 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
+import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.MessageCorrelationResult;
@@ -18,7 +19,7 @@ public class MortgageController {
 
     private static final String USER_ID_HEADER = "x-kratos-authenticated-identity-id";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MortgageController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MortgageController.class);
 
     @Autowired
     private MortgageApplicationRepository mortgageApplicationRepository;
@@ -39,16 +40,19 @@ public class MortgageController {
                         returnDto.getId().toString(),
                         Map.of(PROCESS_VARIABLE_APP_ID, returnDto.getId(), PRESCORING_SUCCESS, false)
                 );
-        LOGGER.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
+        logger.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
         return returnDto;
     }
 
     @DeleteMapping("/{appId}")
     public void delete(@RequestHeader(USER_ID_HEADER)String userId, @PathVariable("appId") String appId) {
         mortgageApplicationRepository.deleteByUserIdAndAppId(UUID.fromString(userId), UUID.fromString(appId));
-        MessageCorrelationResult result = runtimeService.createMessageCorrelation(USER_REJECT_MESSAGE)
-                .processInstanceBusinessKey(appId)
-                .correlateWithResult();
+
+        if (runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(appId, MORTGAGE_PROCESS).count() != 0) {
+            MessageCorrelationResult result = runtimeService.createMessageCorrelation(USER_REJECT_MESSAGE)
+                    .processInstanceBusinessKey(appId)
+                    .correlateWithResult();
+        }
     }
 
     @PatchMapping
