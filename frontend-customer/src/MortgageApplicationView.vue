@@ -88,9 +88,6 @@
             });
 
           stompObj = initStompClient((frame) => {
-                const url = stompObj.stompClient.ws._transport.url;
-                // https://www.baeldung.com/spring-websockets-send-message-to-user
-                console.log("Stomp transport url", url);
                 // allowed prefixes here http://www.rabbitmq.com/stomp.html#d
                 // translated on server side by UserDestinationMessageHandler, DefaultUserDestinationResolver
                 subscriptionApplicationStatusUpdate=stompObj.stompClient.subscribe("/user/queue/mortgage.application.status.update", (data) => {

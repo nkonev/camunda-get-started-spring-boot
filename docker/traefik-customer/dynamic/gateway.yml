@@ -41,6 +41,12 @@ http:
       middlewares:
         - "auth-middleware"
         - "retry-middleware"
+    mortgage-application-stomp-router:
+      rule: "PathPrefix(`/stomp`)"
+      service: mortgage-application-service
+      middlewares:
+        - "auth-middleware"
+        - "retry-middleware"
 
   middlewares:
     api-kratos-strip-prefix-middleware:
