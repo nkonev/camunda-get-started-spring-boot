@@ -66,6 +66,8 @@ public class WebappExampleProcessApplication implements InitializingBean {
        group = identityService.newGroup(groupName);
        identityService.saveGroup(group);
 
+      // GUI https://docs.camunda.org/manual/7.15/webapps/admin/authorization-management/
+      // https://docs.camunda.org/manual/7.15/user-guide/process-engine/authorization-service/#resources
       {
         final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
         newAuthorization.setGroupId(groupName);
