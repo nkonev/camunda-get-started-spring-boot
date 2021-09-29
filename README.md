@@ -28,6 +28,11 @@ Modeler (GUI) https://camunda.com/download/modeler/
 docker exec -it camunda-get-started-spring-boot_postgresql_1 psql -U camunda
 ```
 
+# Reset DB
+```
+docker rm --force camunda-get-started-spring-boot_mortgage-application-postgresql_1 ; docker volume  rm camunda-get-started-spring-boot_mortgage_application_postgres_data ; docker-compose  up -d
+```
+
 # Ask kratos
 [doc](https://www.ory.sh/kratos/docs/reference/api/#operation/toSession)
 ```

@@ -22,11 +22,16 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
 import java.util.List;
 
+import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.MORTGAGE_PROCESS;
+
 @EnableJdbcAuditing
 @EnableJdbcRepositories
 @SpringBootApplication
 @EnableProcessApplication
 public class WebappExampleProcessApplication implements InitializingBean {
+
+  public static final String MORTGAGE_GROUP = "mortgage";
+
 
   @Autowired
   private ManagementService managementService;
@@ -51,7 +56,7 @@ public class WebappExampleProcessApplication implements InitializingBean {
             "manager",
             "employee"
     ).forEach(login -> {
-      ensureUser("mortgage", login);
+      ensureUser(MORTGAGE_GROUP, login);
     });
 
     List.of("broker", "investor").forEach(login -> {
@@ -78,11 +83,12 @@ public class WebappExampleProcessApplication implements InitializingBean {
         logger.info("Authorization {} successfully saved", authorization);
       }
 
+      if (MORTGAGE_GROUP.equals(groupName))
       {
         final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
         newAuthorization.setGroupId(groupName);
         newAuthorization.setResource(Resources.TASK);
-        newAuthorization.setResourceId("*");
+        newAuthorization.setResourceId(MORTGAGE_PROCESS);
         newAuthorization.addPermission(Permissions.ALL);
         final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
         logger.info("Authorization {} successfully saved", authorization);
