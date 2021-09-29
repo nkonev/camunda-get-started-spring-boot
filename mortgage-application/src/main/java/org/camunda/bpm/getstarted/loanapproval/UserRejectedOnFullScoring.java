@@ -18,7 +18,7 @@ public class UserRejectedOnFullScoring implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         UUID appId = (UUID) execution.getVariable(PROCESS_VARIABLE_APP_ID);
-        logger.info("Заявка отклонена пользователем {} на полном скоринге", appId);
+        logger.info("Заявка {} отклонена пользователем на полном скоринге", appId);
 
     }
 }
