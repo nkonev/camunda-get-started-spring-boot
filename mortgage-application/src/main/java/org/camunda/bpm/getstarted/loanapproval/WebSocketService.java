@@ -22,6 +22,7 @@ public class WebSocketService {
 
     public void sendStatusUpdate(UUID userId, MortgageAppDto mortgageAppDto) {
         // https://stackoverflow.com/questions/22367223/sending-message-to-specific-user-on-spring-websocket
+        // https://www.baeldung.com/spring-websockets-send-message-to-user
         try {
             logger.info("Sending to user {} message {}", userId, objectMapper.writeValueAsString(mortgageAppDto));
         } catch (Exception ignore) {}
