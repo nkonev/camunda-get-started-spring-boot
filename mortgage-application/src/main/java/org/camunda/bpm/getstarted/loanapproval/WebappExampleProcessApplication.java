@@ -85,7 +85,6 @@ public class WebappExampleProcessApplication implements InitializingBean {
         newAuthorization.setResource(Resources.APPLICATION);
         newAuthorization.setResourceId("tasklist");
         newAuthorization.addPermission(Permissions.ALL);
-        //newAuthorization.addPermission(Permissions.READ);
         final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
         logger.info("Authorization {} successfully saved", authorization);
       }
@@ -93,29 +92,35 @@ public class WebappExampleProcessApplication implements InitializingBean {
 //      final boolean userAuthorized = authorizationService.isUserAuthorized(userId, List.of(groupName), Permissions.READ, Resources.TASK);
 //      logger.info("User {} authorized {}", userId, userAuthorized);
 //
-//      {
-//        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-//        newAuthorization.setResource(Resources.DASHBOARD);
-//        newAuthorization.setGroupId(groupName);
-//        newAuthorization.addPermission(Permissions.ALL);
-//        authorizationService.saveAuthorization(newAuthorization);
-//      }
+      {
+        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
+        newAuthorization.setGroupId(groupName);
+        newAuthorization.setResource(Resources.TASK);
+        newAuthorization.setResourceId("*");
+        newAuthorization.addPermission(Permissions.ALL);
+        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
+        logger.info("Authorization {} successfully saved", authorization);
+      }
 //
-//      {
-//        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-//        newAuthorization.setResource(Resources.APPLICATION);
-//        newAuthorization.setGroupId(groupName);
-//        newAuthorization.addPermission(Permissions.ALL);
-//        authorizationService.saveAuthorization(newAuthorization);
-//      }
+      {
+        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
+        newAuthorization.setGroupId(groupName);
+        newAuthorization.setResource(Resources.PROCESS_INSTANCE);
+        newAuthorization.setResourceId("*");
+        newAuthorization.addPermission(Permissions.ALL);
+        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
+        logger.info("Authorization {} successfully saved", authorization);
+      }
 //
-//      {
-//        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-//        newAuthorization.setResource(Resources.DEPLOYMENT);
-//        newAuthorization.setGroupId(groupName);
-//        newAuthorization.addPermission(Permissions.ALL);
-//        authorizationService.saveAuthorization(newAuthorization);
-//      }
+      {
+        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
+        newAuthorization.setGroupId(groupName);
+        newAuthorization.setResource(Resources.FILTER);
+        newAuthorization.setResourceId("*");
+        newAuthorization.addPermission(Permissions.ALL);
+        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
+        logger.info("Authorization {} successfully saved", authorization);
+      }
 //
 //      {
 //        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
