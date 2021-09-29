@@ -12,6 +12,9 @@ public interface MortgageApplicationRepository extends CrudRepository<MortgageAp
     @Query("select * from mortgage_application where user_id = :userId order by created_date_time desc limit 1")
     Optional<MortgageApplication> findLastActual(@Param("userId") UUID userId);
 
+    @Query("select * from mortgage_application where user_id = :userId and id = :appId")
+    Optional<MortgageApplication> findByIdAndUserId(@Param("userId") UUID userId, @Param("appId") UUID appId);
+
     @Modifying
     @Query("delete from mortgage_application where user_id = :userId and id = :appId")
     void deleteByUserIdAndAppId(@Param("userId") UUID userId, @Param("appId") UUID appId);

@@ -1,6 +1,5 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
-import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.MessageCorrelationResult;
@@ -50,7 +49,9 @@ public class MortgageController {
 
     @PatchMapping
     public MortgageAppDto update(@RequestHeader(USER_ID_HEADER)String userId, @RequestBody MortgageAppDto createDto) {
-        return mortgageApplicationRepository.save(createDto.toEntityForUpdate(UUID.fromString(userId))).toDto();
+        var userIdUuid = UUID.fromString(userId);
+        checkAppBelongs(createDto.getId(), userIdUuid);
+        return mortgageApplicationRepository.save(createDto.toEntityForUpdate(userIdUuid)).toDto();
     }
 
     @GetMapping
@@ -61,7 +62,11 @@ public class MortgageController {
 
     @PutMapping("/send/{appId}")
     public void send(@RequestHeader(USER_ID_HEADER)String userId, @PathVariable("appId") String appId) {
-        final MortgageApplication mortgageApplication = mortgageApplicationRepository.findById(UUID.fromString(appId)).orElseThrow();
+        var userIdUuid = UUID.fromString(userId);
+        var appIdUuid = UUID.fromString(appId);
+        checkAppBelongs(appIdUuid, userIdUuid);
+
+        final MortgageApplication mortgageApplication = mortgageApplicationRepository.findById(appIdUuid).orElseThrow();
         final ProcessInstance mortgageProcessInstance = processEngine.getRuntimeService()
                 .startProcessInstanceByKey(
                         MORTGAGE_PROCESS,
@@ -69,6 +74,10 @@ public class MortgageController {
                         Map.of(PROCESS_VARIABLE_APP_ID, mortgageApplication.getId(), PRESCORING_SUCCESS, false)
                 );
         logger.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
+    }
+
+    private void checkAppBelongs(UUID appId, UUID userIdUuid) {
+        mortgageApplicationRepository.findByIdAndUserId(userIdUuid, appId).orElseThrow(() -> new RuntimeException("Mortgage application is not found"));
     }
 
 }
