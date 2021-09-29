@@ -47,16 +47,16 @@ public class WebappExampleProcessApplication implements InitializingBean {
   public void afterPropertiesSet() throws Exception {
     managementService.toggleTelemetry(false);
     List.of(
-//            "underwriter",
-            "manager"//,
-//            "employee"
+            "underwriter",
+            "manager",
+            "employee"
     ).forEach(login -> {
       ensureUser("mortgage", login);
     });
-//
-//    List.of("broker", "investor").forEach(login -> {
-//      ensureUser("broker", login);
-//    });
+
+    List.of("broker", "investor").forEach(login -> {
+      ensureUser("broker", login);
+    });
 
   }
 
@@ -65,6 +65,37 @@ public class WebappExampleProcessApplication implements InitializingBean {
     if (group == null) {
        group = identityService.newGroup(groupName);
        identityService.saveGroup(group);
+
+      {
+        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
+        newAuthorization.setGroupId(groupName);
+        newAuthorization.setResource(Resources.APPLICATION);
+        newAuthorization.setResourceId("tasklist");
+        newAuthorization.addPermission(Permissions.ALL);
+        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
+        logger.info("Authorization {} successfully saved", authorization);
+      }
+
+      {
+        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
+        newAuthorization.setGroupId(groupName);
+        newAuthorization.setResource(Resources.TASK);
+        newAuthorization.setResourceId("*");
+        newAuthorization.addPermission(Permissions.ALL);
+        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
+        logger.info("Authorization {} successfully saved", authorization);
+      }
+
+      {
+        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
+        newAuthorization.setGroupId(groupName);
+        newAuthorization.setResource(Resources.FILTER);
+        newAuthorization.setResourceId("*");
+        newAuthorization.addPermission(Permissions.ALL);
+        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
+        logger.info("Authorization {} successfully saved", authorization);
+      }
+
     }
 
     if (identityService.createUserQuery().userId(userId).singleResult() == null) {
@@ -78,57 +109,6 @@ public class WebappExampleProcessApplication implements InitializingBean {
       logger.info("User {} successfully saved", userId);
 
       identityService.createMembership(userId, groupName);
-
-      {
-        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-        newAuthorization.setGroupId(groupName);
-        newAuthorization.setResource(Resources.APPLICATION);
-        newAuthorization.setResourceId("tasklist");
-        newAuthorization.addPermission(Permissions.ALL);
-        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
-        logger.info("Authorization {} successfully saved", authorization);
-      }
-
-//      final boolean userAuthorized = authorizationService.isUserAuthorized(userId, List.of(groupName), Permissions.READ, Resources.TASK);
-//      logger.info("User {} authorized {}", userId, userAuthorized);
-//
-      {
-        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-        newAuthorization.setGroupId(groupName);
-        newAuthorization.setResource(Resources.TASK);
-        newAuthorization.setResourceId("*");
-        newAuthorization.addPermission(Permissions.ALL);
-        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
-        logger.info("Authorization {} successfully saved", authorization);
-      }
-//
-      {
-        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-        newAuthorization.setGroupId(groupName);
-        newAuthorization.setResource(Resources.PROCESS_INSTANCE);
-        newAuthorization.setResourceId("*");
-        newAuthorization.addPermission(Permissions.ALL);
-        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
-        logger.info("Authorization {} successfully saved", authorization);
-      }
-//
-      {
-        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-        newAuthorization.setGroupId(groupName);
-        newAuthorization.setResource(Resources.FILTER);
-        newAuthorization.setResourceId("*");
-        newAuthorization.addPermission(Permissions.ALL);
-        final Authorization authorization = authorizationService.saveAuthorization(newAuthorization);
-        logger.info("Authorization {} successfully saved", authorization);
-      }
-//
-//      {
-//        final Authorization newAuthorization = authorizationService.createNewAuthorization(Authorization.AUTH_TYPE_GRANT);
-//        newAuthorization.setResource(Resources.PROCESS_INSTANCE);
-//        newAuthorization.setGroupId(groupName);
-//        newAuthorization.addPermission(Permissions.ALL);
-//        authorizationService.saveAuthorization(newAuthorization);
-//      }
 
 
 
