@@ -8,6 +8,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "@mdi/font": "^5.9.55",
+    "@stomp/stompjs": "^5.4.2",
     "axios": "^0.21.1",
     "stylus": "^0.54.8",
     "typeface-roboto": "1.1.13",
@@ -16,7 +17,8 @@
     "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.5.2",
     "vuetify": "2.5.8",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "websocket": "^1.0.30"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",

@@ -19,6 +19,9 @@ public class PrescoringHandler implements JavaDelegate {
     private static final Logger logger = LoggerFactory.getLogger(PrescoringHandler.class);
 
     @Autowired
+    private WebSocketService webSocketService;
+
+    @Autowired
     private MortgageApplicationRepository mortgageApplicationRepository;
 
     @Override
@@ -33,5 +36,7 @@ public class PrescoringHandler implements JavaDelegate {
             logger.info("Заявка {} подозрительна и не прошла прескоринг", mortgageApplication.getId());
             execution.setVariable(PRESCORING_SUCCESS, false);
         }
+
+        webSocketService.sendStatusUpdate(mortgageApplication.getUserId(), mortgageApplication.toDto());
     }
 }

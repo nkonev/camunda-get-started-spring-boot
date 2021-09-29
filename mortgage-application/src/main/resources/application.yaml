@@ -17,3 +17,12 @@ spring.datasource:
 
 server:
   port: 8066
+
+custom.stomp.broker:
+  host: "localhost"
+  port: 60683
+  virtual-host: /
+  client-login: mortgage
+  client-password: mortgagePazZw0rd
+  system-login: mortgage
+  system-password: mortgagePazZw0rd

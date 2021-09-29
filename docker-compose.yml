@@ -29,31 +29,20 @@ services:
       - ./frontend-nginx-customer:/usr/share/nginx/html:ro
       - ./docker/nginx-customer/frontend.conf:/etc/nginx/conf.d/default.conf:ro
 
-  traefik-employee:
-    image: traefik:v2.4.8
-    hostname: traefik
-    restart: unless-stopped
-    # The Static Configuration
-    command: --configFile=/traefik_conf/traefik.yml
-    ports:
-      - 9083:8081
-    extra_hosts:
-      # https://github.com/moby/moby/pull/40007
-      # works on Docker for Mac 3.4.0 or Linux Docker 20.10.4
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./docker/traefik-employee:/traefik_conf
-
-  # static server
-  frontend-employee:
-    image: nginx:1.16.0
+  mortgage-application-rabbitmq:
+    image: rabbitmq:3.7.6
     restart: unless-stopped
     ports:
-      - 9084:8082
+      - 45682:15672
+      #      - 35672:5672
+      - 60683:61613
+    #      - 35674:15674
+    environment:
+      - RABBITMQ_DEFAULT_USER=mortgage
+      - RABBITMQ_DEFAULT_PASS=mortgagePazZw0rd
     volumes:
-      - ./frontend-nginx-employee:/usr/share/nginx/html:ro
-      - ./docker/nginx-employee/frontend.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/rabbitmq_dev/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - rabbitmq_data_dir:/var/lib/rabbitmq/mnesia
 
   mortgage-application-postgresql:
     image: postgres:13.4
@@ -122,63 +111,6 @@ services:
         target: /etc/config/kratos
 
 
-
-  kratos-employee-postgresql:
-    image: postgres:13.4
-    restart: unless-stopped
-    ports:
-      - "5900:5432"
-    environment:
-      - POSTGRES_USER=kratos
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=kratos
-    volumes:
-      - kratos_employee_postgres_data:/var/lib/postgresql/data
-
-  kratos-employee-migrate:
-    image: oryd/kratos:v0.7.4-alpha.1
-    environment:
-      - DSN=postgres://kratos:secret@kratos-employee-postgresql:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
-      - SQA_OPT_OUT=true
-    restart: on-failure
-    depends_on:
-      - kratos-employee-postgresql
-    command: migrate sql -e -y
-
-  kratos-employee-selfservice-ui-node:
-    image: oryd/kratos-selfservice-ui-node:v0.7.4-alpha.1
-    environment:
-      - KRATOS_PUBLIC_URL=http://kratos-employee:4433/
-      - KRATOS_ADMIN_URL=http://kratos-employee:4434/
-      - BASE_URL=http://127.0.0.1:9083/api/aaa-employee-self-service
-      - PORT=4955
-      - SECURITY_MODE=cookie
-      - KRATOS_BROWSER_URL=http://127.0.0.1:9083/api/aaa-employee-backend
-      - PROJECT_NAME=Mortgage Employee
-    restart: on-failure
-    ports:
-      - "4955:4955"
-
-  kratos-employee:
-    depends_on:
-      - kratos-employee-migrate
-    image: oryd/kratos:v0.7.4-alpha.1
-    ports:
-      - '4933:4433' # public
-      - '4934:4434' # admin
-    restart: unless-stopped
-    environment:
-      - DSN=postgres://kratos:secret@kratos-employee-postgresql:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
-      - LOG_LEVEL=trace
-      - SQA_OPT_OUT=true
-    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
-    volumes:
-      - type: bind
-        source: ./docker/kratos-employee
-        # https://www.ory.sh/kratos/docs/reference/configuration
-        target: /etc/config/kratos
-
-
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
@@ -189,4 +121,4 @@ services:
 volumes:
   mortgage_application_postgres_data:
   kratos_customer_postgres_data:
-  kratos_employee_postgres_data:
+  rabbitmq_data_dir:

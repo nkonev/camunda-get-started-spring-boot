@@ -46,8 +46,11 @@
 </template>
 
 <script>
-
+    import { initStompClient, closeStompClient } from './utils';
     import axios from "axios";
+
+    let stompObj;
+    let subscriptionApplicationStatusUpdate;
 
     const factory = () => {
         return {
@@ -82,7 +85,27 @@
                 this.errored = true;
             }).finally(() => {
               this.loading = false;
-            })
+            });
+
+          stompObj = initStompClient((frame) => {
+                const url = stompObj.stompClient.ws._transport.url;
+                // https://www.baeldung.com/spring-websockets-send-message-to-user
+                console.log("Stomp transport url", url);
+                // allowed prefixes here http://www.rabbitmq.com/stomp.html#d
+                // translated on server side by UserDestinationMessageHandler, DefaultUserDestinationResolver
+                subscriptionApplicationStatusUpdate=stompObj.stompClient.subscribe("/user/queue/mortgage.application.status.update", (data) => {
+                  const message = data.body;
+                  const obj = JSON.parse(message);
+                  console.log(message);
+                });
+          });
+        },
+        beforeDestroy() {
+          try {
+            subscriptionApplicationStatusUpdate.unsubscribe();
+          } catch (ignored){}
+          
+          closeStompClient(stompObj);
         },
         computed: {
           appExists() {

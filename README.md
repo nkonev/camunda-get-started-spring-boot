@@ -71,10 +71,9 @@ v15.11.0
 ```
 http://localhost:8066
 ```
-demo/demo
-
-# Open employee workspace
-http://127.0.0.1:9083
+admin/admin for full access
+manager/manager for access only to mortgage tasklist
+broker/broker as foreign user without access to mortgage tasks
 
 # Open customer workspace
 http://127.0.0.1:8083
