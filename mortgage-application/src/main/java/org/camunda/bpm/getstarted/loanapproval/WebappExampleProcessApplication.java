@@ -2,6 +2,7 @@ package org.camunda.bpm.getstarted.loanapproval;
 
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.AuthorizationService;
+import org.camunda.bpm.engine.FilterService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.authorization.Authorization;
@@ -21,6 +22,7 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.MORTGAGE_PROCESS;
 
@@ -43,6 +45,9 @@ public class WebappExampleProcessApplication implements InitializingBean {
   @Autowired
   private AuthorizationService authorizationService;
 
+  @Autowired
+  private FilterService filterService;
+
   private static final Logger logger = LoggerFactory.getLogger(WebappExampleProcessApplication.class);
 
   public static void main(String... args) {
@@ -64,6 +69,13 @@ public class WebappExampleProcessApplication implements InitializingBean {
       ensureUser("broker", login);
     });
 
+    filterService.createFilterQuery().filterNameLike("All tasks").list().forEach(filter -> {
+      final Map<String, Object> properties = filter.getProperties();
+      properties.put("refresh", true);
+      logger.info("Setting refresh for filter");
+      filter.setProperties(properties);
+      filterService.saveFilter(filter);
+    });
   }
 
   private void ensureUser(String groupName, String userId) {
