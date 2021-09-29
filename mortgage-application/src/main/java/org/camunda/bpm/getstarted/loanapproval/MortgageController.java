@@ -1,6 +1,8 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.runtime.MessageCorrelationResult;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +26,19 @@ public class MortgageController {
     @Autowired
     private ProcessEngine processEngine;
 
+    @Autowired
+    private RuntimeService runtimeService;
+
     @PostMapping
     public MortgageAppDto create(@RequestHeader(USER_ID_HEADER)String userId, @RequestBody MortgageAppDto createDto) {
         final MortgageAppDto returnDto = mortgageApplicationRepository.save(createDto.toEntityForCreate(UUID.fromString(userId))).toDto();
 
-        final ProcessInstance mortgageProcessInstance = processEngine.getRuntimeService().startProcessInstanceByKey(MORTGAGE_PROCESS, Map.of(PROCESS_VARIABLE_APP_ID, returnDto.getId(), PRESCORING_SUCCESS, false));
+        final ProcessInstance mortgageProcessInstance = processEngine.getRuntimeService()
+                .startProcessInstanceByKey(
+                        MORTGAGE_PROCESS,
+                        returnDto.getId().toString(),
+                        Map.of(PROCESS_VARIABLE_APP_ID, returnDto.getId(), PRESCORING_SUCCESS, false)
+                );
         LOGGER.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
         return returnDto;
     }
@@ -36,7 +46,9 @@ public class MortgageController {
     @DeleteMapping("/{appId}")
     public void delete(@RequestHeader(USER_ID_HEADER)String userId, @PathVariable("appId") String appId) {
         mortgageApplicationRepository.deleteByUserIdAndAppId(UUID.fromString(userId), UUID.fromString(appId));
-        // TODO camunda
+        MessageCorrelationResult result = runtimeService.createMessageCorrelation(USER_REJECT_MESSAGE)
+                .processInstanceBusinessKey(appId)
+                .correlateWithResult();
     }
 
     @PatchMapping

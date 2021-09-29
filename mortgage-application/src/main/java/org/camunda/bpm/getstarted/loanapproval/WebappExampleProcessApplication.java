@@ -7,7 +7,6 @@ import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.authorization.Authorization;
 import org.camunda.bpm.engine.authorization.Permissions;
 import org.camunda.bpm.engine.authorization.Resources;
-import org.camunda.bpm.engine.authorization.TaskPermissions;
 import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;

@@ -8,20 +8,15 @@
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${mortgageIssued}" event="start" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1t3sqhf</bpmn:incoming>
+      <bpmn:incoming>Flow_0616ex8</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1ixln4l" sourceRef="StartEvent_1" targetRef="Activity_0y54hdf" />
-    <bpmn:sequenceFlow id="Flow_0616ex8" sourceRef="Activity_0ranavd" targetRef="Activity_0wropab" />
-    <bpmn:sequenceFlow id="Flow_1t3sqhf" sourceRef="Activity_0wropab" targetRef="Event_1071vyw" />
+    <bpmn:sequenceFlow id="Flow_0616ex8" sourceRef="Activity_0ranavd" targetRef="Event_1071vyw" />
     <bpmn:userTask id="Activity_0ranavd" name="полный скоринг" camunda:assignee="${fullScoringService.findManagerForTask()}">
       <bpmn:incoming>Flow_1av22a4</bpmn:incoming>
       <bpmn:outgoing>Flow_0616ex8</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_0wropab" name="проверка залога если есть">
-      <bpmn:incoming>Flow_0616ex8</bpmn:incoming>
-      <bpmn:outgoing>Flow_1t3sqhf</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_0y54hdf" name="прескорниг" camunda:delegateExpression="${prescoringService}">
+    <bpmn:serviceTask id="Activity_0y54hdf" name="прескоринг" camunda:delegateExpression="${prescoringService}">
       <bpmn:incoming>Flow_1ixln4l</bpmn:incoming>
       <bpmn:outgoing>Flow_07ukcsq</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -43,7 +38,20 @@
     <bpmn:sequenceFlow id="Flow_03ucji0" name="no" sourceRef="Gateway_1rmb3e1" targetRef="Event_10y52le">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${prescoringSuccess == false}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1jwrobe" name="пользовательский отказ на полном скоринге">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${userRejectedOnFullScoring}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_19xbcvx</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_19xbcvx" sourceRef="Event_01ch6pm" targetRef="Event_1jwrobe" />
+    <bpmn:boundaryEvent id="Event_01ch6pm" attachedToRef="Activity_0ranavd">
+      <bpmn:outgoing>Flow_19xbcvx</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0geka28" messageRef="Message_1n791th" />
+    </bpmn:boundaryEvent>
   </bpmn:process>
+  <bpmn:signal id="Signal_194ao33" name="userRejectSignal" />
+  <bpmn:message id="Message_1n791th" name="userRejectMessage" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="mortgageProcessId">
       <bpmndi:BPMNEdge id="Flow_03ucji0_di" bpmnElement="Flow_03ucji0">
@@ -65,17 +73,18 @@
         <di:waypoint x="410" y="117" />
         <di:waypoint x="485" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1t3sqhf_di" bpmnElement="Flow_1t3sqhf">
-        <di:waypoint x="900" y="117" />
-        <di:waypoint x="1022" y="117" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0616ex8_di" bpmnElement="Flow_0616ex8">
         <di:waypoint x="700" y="117" />
-        <di:waypoint x="800" y="117" />
+        <di:waypoint x="1022" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ixln4l_di" bpmnElement="Flow_1ixln4l">
         <di:waypoint x="215" y="117" />
         <di:waypoint x="310" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19xbcvx_di" bpmnElement="Flow_19xbcvx">
+        <di:waypoint x="650" y="175" />
+        <di:waypoint x="650" y="260" />
+        <di:waypoint x="1012" y="260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
@@ -92,9 +101,6 @@
       <bpmndi:BPMNShape id="Activity_1ppdzzg_di" bpmnElement="Activity_0ranavd">
         <dc:Bounds x="600" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0elw5zr_di" bpmnElement="Activity_0wropab">
-        <dc:Bounds x="800" y="77" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ttric3_di" bpmnElement="Activity_0y54hdf">
         <dc:Bounds x="310" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -106,6 +112,15 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1010" y="375" width="63" height="27" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1jwrobe_di" bpmnElement="Event_1jwrobe">
+        <dc:Bounds x="1012" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="987" y="285" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xbno7g_di" bpmnElement="Event_01ch6pm">
+        <dc:Bounds x="632" y="139" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
