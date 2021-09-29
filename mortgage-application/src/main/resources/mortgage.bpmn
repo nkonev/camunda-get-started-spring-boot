@@ -13,7 +13,7 @@
     <bpmn:sequenceFlow id="Flow_1ixln4l" sourceRef="StartEvent_1" targetRef="Activity_0y54hdf" />
     <bpmn:sequenceFlow id="Flow_0616ex8" sourceRef="Activity_0ranavd" targetRef="Activity_0wropab" />
     <bpmn:sequenceFlow id="Flow_1t3sqhf" sourceRef="Activity_0wropab" targetRef="Event_1071vyw" />
-    <bpmn:userTask id="Activity_0ranavd" name="полный скоринг" camunda:candidateGroups="mortgage">
+    <bpmn:userTask id="Activity_0ranavd" name="полный скоринг" camunda:assignee="${fullScoringService.findManagerForTask()}">
       <bpmn:incoming>Flow_1av22a4</bpmn:incoming>
       <bpmn:outgoing>Flow_0616ex8</bpmn:outgoing>
     </bpmn:userTask>
