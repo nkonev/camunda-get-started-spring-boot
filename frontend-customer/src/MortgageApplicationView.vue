@@ -17,6 +17,11 @@
           type="warning"
           v-if = "currentApp.status == 'PRESCORING_FAILED'"
       >Prescoring rejected</v-alert>
+      <v-alert
+          class="mx-4"
+          type="warning"
+          v-if = "currentApp.status == 'FULLSCORING_FAILED'"
+      >Fullcoring failed</v-alert>
 
       <v-card-text v-if="canCreateNewApp">
         <v-btn @click="createNewApp()" class="primary">Create new application</v-btn>
@@ -132,7 +137,7 @@
             return this.currentApp.id;
           },
           canCreateNewApp() {
-            return this.currentApp.status == 'COMPLETED' || this.currentApp.status == 'PRESCORING_FAILED' || this.currentApp.status == 'USER_CANCELED';
+            return ['COMPLETED', 'PRESCORING_FAILED', 'USER_CANCELED', 'FULLSCORING_FAILED'].includes(this.currentApp.status)
           }
         },
         methods: {
