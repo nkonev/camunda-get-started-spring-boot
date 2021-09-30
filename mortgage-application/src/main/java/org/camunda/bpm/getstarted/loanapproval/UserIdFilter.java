@@ -36,6 +36,7 @@ public class UserIdFilter extends GenericFilterBean {
             final UUID userId = UUID.fromString(maybeHeaderValue);
             maybeScheduledSender.ifAvailable(scheduledSender -> scheduledSender.setLastUserUuid(maybeHeaderValue));
             logger.info("Authenticating http with userId={}", userId);
+            // this required in order to get SimpMessagingTemplate#convertAndSendToUser working, see also WebSocketConfig
             filterChain.doFilter(new SimpleAuthenticatedRequest(httpRequest, new SimplePrincipal(maybeHeaderValue)), servletResponse);
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
