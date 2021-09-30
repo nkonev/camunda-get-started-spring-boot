@@ -16,6 +16,16 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="fullScoringFormApproved" label="Согласовать выдачу ипотеки" type="boolean" defaultValue="true" />
+          <camunda:formField id="fullScoringFormAddress" label="Адрес" type="string" defaultValue="${mortgageService.getPrescoredAddress(execution)}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="1" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="fullScorinFormPrice" label="Цена" type="long" defaultValue="${mortgageService.getPrescoredPrice(execution)}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="1" />
+            </camunda:validation>
+          </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1av22a4</bpmn:incoming>
