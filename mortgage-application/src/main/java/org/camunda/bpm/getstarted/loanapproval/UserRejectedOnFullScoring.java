@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.PROCESS_VARIABLE_APP_ID;
 
 @Component
 public class UserRejectedOnFullScoring implements JavaDelegate {
@@ -17,7 +16,7 @@ public class UserRejectedOnFullScoring implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        UUID appId = (UUID) execution.getVariable(PROCESS_VARIABLE_APP_ID);
+        UUID appId = UUID.fromString(execution.getBusinessKey());
         logger.info("Заявка {} отклонена-удалена пользователем на полном скоринге", appId);
     }
 }

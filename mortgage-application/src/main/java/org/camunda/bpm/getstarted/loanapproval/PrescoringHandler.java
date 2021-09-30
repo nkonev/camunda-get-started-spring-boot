@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.PRESCORING_SUCCESS;
-import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.PROCESS_VARIABLE_APP_ID;
 
 @Component("prescoringService")
 public class PrescoringHandler implements JavaDelegate {
@@ -26,7 +25,7 @@ public class PrescoringHandler implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         logger.info("Начало прескоринга");
-        UUID appId = (UUID) execution.getVariable(PROCESS_VARIABLE_APP_ID);
+        UUID appId = UUID.fromString(execution.getBusinessKey());
         final MortgageApplication mortgageApplication = mortgageApplicationRepository.findById(appId).orElseThrow();
         if (mortgageApplication.getPrice().compareTo(new BigDecimal("400000")) > 0) {
             logger.info("Заявка {} успешно прошла прескоринг", mortgageApplication.getId());

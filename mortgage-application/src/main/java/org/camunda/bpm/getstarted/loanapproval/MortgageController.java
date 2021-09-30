@@ -74,7 +74,7 @@ public class MortgageController {
                 .startProcessInstanceByKey(
                         MORTGAGE_PROCESS,
                         mortgageApplication.getId().toString(),
-                        Map.of(PROCESS_VARIABLE_APP_ID, mortgageApplication.getId(), PRESCORING_SUCCESS, false)
+                        Map.of( PRESCORING_SUCCESS, false)
                 );
         logger.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
         final MortgageApplication actualMortgageApplication = mortgageApplicationRepository.findById(appIdUuid).orElseThrow();

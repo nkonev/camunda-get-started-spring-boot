@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-import static org.camunda.bpm.getstarted.loanapproval.CamundaConstants.PROCESS_VARIABLE_APP_ID;
 
 @Component
 public class MortgageRejectedOnPrescoring implements JavaDelegate {
@@ -24,7 +23,7 @@ public class MortgageRejectedOnPrescoring implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        UUID appId = (UUID) execution.getVariable(PROCESS_VARIABLE_APP_ID);
+        UUID appId = UUID.fromString(execution.getBusinessKey());
 
         mortgageApplicationRepository.findById(appId).ifPresent(mortgageApplication -> {
             mortgageApplication.setStatus(MortgageApplicationStatus.PRESCORING_FAILED);
