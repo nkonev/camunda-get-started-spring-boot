@@ -1,6 +1,5 @@
 package org.camunda.bpm.getstarted.loanapproval;
 
-import javax.security.auth.Subject;
 import java.security.Principal;
 
 class SimplePrincipal implements Principal {
@@ -16,8 +15,4 @@ class SimplePrincipal implements Principal {
         return userId;
     }
 
-    @Override
-    public boolean implies(Subject subject) {
-        return Principal.super.implies(subject);
-    }
 }
