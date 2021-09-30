@@ -1,6 +1,6 @@
 <template>
   <v-card :disabled="loading">
-    <v-card-title class="title pb-0 pt-1" v-text="appExists ? 'Current application' : 'New application'"></v-card-title>
+    <v-card-title class="title pb-0 pt-1" v-text="appExists ? 'Текущая заявка' : 'Новая заявка'"></v-card-title>
     <v-alert
         class="mx-4"
         type="error"
@@ -11,25 +11,25 @@
           class="mx-4"
           type="success"
           v-if = "currentApp.status == 'COMPLETED'"
-      >Mortgage issued</v-alert>
+      >Ипотека выдана</v-alert>
       <v-alert
           class="mx-4"
           type="warning"
           v-if = "currentApp.status == 'PRESCORING_FAILED'"
-      >Prescoring rejected</v-alert>
+      >Прескоринг провален</v-alert>
       <v-alert
           class="mx-4"
           type="warning"
           v-if = "currentApp.status == 'FULLSCORING_FAILED'"
-      >Fullcoring failed</v-alert>
+      >Полный скоринг провален</v-alert>
       <v-alert
           type="info"
           class="mx-4"
           v-if = "currentApp.status == 'AWAITING_MANUAL_FULLSCORING'"
-      >This app is waiting for manual full scoring</v-alert>
+      >Заявка ожидает ручной проверки</v-alert>
 
       <v-card-text v-if="canCreateNewApp">
-        <v-btn @click="createNewApp()" class="primary">Create new application</v-btn>
+        <v-btn @click="createNewApp()" class="primary">Новая заявка</v-btn>
       </v-card-text>
       <template v-else>
         <v-card-text>
@@ -64,9 +64,9 @@
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="saveApp()" class="primary" :loading="saving">Save</v-btn>
-          <v-btn v-if="appExists && canSendApp" @click="sendAppToCamunda()" class="primary" :loading="saving">Send</v-btn>
-          <v-btn v-if="appExists" @click="deleteApp()" class="warning" :loading="saving">Cancel</v-btn>
+          <v-btn @click="saveApp()" class="primary" :loading="saving">Сохранить</v-btn>
+          <v-btn v-if="appExists && canSendApp" @click="sendAppToCamunda()" class="primary" :loading="saving">Отправить</v-btn>
+          <v-btn v-if="appExists" @click="deleteApp()" class="warning" :loading="saving">Удалить</v-btn>
         </v-card-actions>
       </template>
     </template>

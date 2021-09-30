@@ -71,9 +71,9 @@
         data () {
             return {
                 appBarItems: [
-                    { title: 'Mortgage application', icon: 'mdi-home-city', clickFunction: this.goHome, requireAuthenticated: false },
-                    { title: 'My Account', icon: 'mdi-account', clickFunction: this.goProfile, requireAuthenticated: true },
-                    { title: 'Logout', icon: 'mdi-logout', clickFunction: this.logout, requireAuthenticated: true },
+                    { title: 'Заявка', icon: 'mdi-home-city', clickFunction: this.goHome, requireAuthenticated: false },
+                    { title: 'Профиль', icon: 'mdi-account', clickFunction: this.goProfile, requireAuthenticated: true },
+                    { title: 'Выйти', icon: 'mdi-logout', clickFunction: this.logout, requireAuthenticated: true },
                 ],
                 drawer: this.$vuetify.breakpoint.lgAndUp,
             }
