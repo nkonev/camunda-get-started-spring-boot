@@ -61,12 +61,15 @@ public class MortgageController {
     }
 
     @PutMapping("/send/{appId}")
-    public void send(@RequestHeader(USER_ID_HEADER)String userId, @PathVariable("appId") String appId) {
+    public MortgageAppDto send(@RequestHeader(USER_ID_HEADER)String userId, @PathVariable("appId") String appId) {
         var userIdUuid = UUID.fromString(userId);
         var appIdUuid = UUID.fromString(appId);
         checkAppBelongs(appIdUuid, userIdUuid);
 
         final MortgageApplication mortgageApplication = mortgageApplicationRepository.findById(appIdUuid).orElseThrow();
+        mortgageApplication.setSent(true);
+        mortgageApplicationRepository.save(mortgageApplication);
+
         final ProcessInstance mortgageProcessInstance = processEngine.getRuntimeService()
                 .startProcessInstanceByKey(
                         MORTGAGE_PROCESS,
@@ -74,6 +77,8 @@ public class MortgageController {
                         Map.of(PROCESS_VARIABLE_APP_ID, mortgageApplication.getId(), PRESCORING_SUCCESS, false)
                 );
         logger.info("Started camunda process with processInstanceId={}, suspended={}", mortgageProcessInstance.getProcessInstanceId(), mortgageProcessInstance.isSuspended());
+        final MortgageApplication actualMortgageApplication = mortgageApplicationRepository.findById(appIdUuid).orElseThrow();
+        return actualMortgageApplication.toDto();
     }
 
     private void checkAppBelongs(UUID appId, UUID userIdUuid) {

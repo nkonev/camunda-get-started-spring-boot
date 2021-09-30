@@ -16,6 +16,7 @@ public class MortgageApplication {
     private UUID userId;
     private String property;
     private BigDecimal price;
+    private boolean sent;
     private MortgageApplicationStatus status = MortgageApplicationStatus.NEW;
     @CreatedDate
     private Instant createdDateTime;
@@ -48,6 +49,7 @@ public class MortgageApplication {
         ret.setCreatedDateTime(this.createdDateTime);
         ret.setPrice(this.price);
         ret.setStatus(this.status);
+        ret.setSent(this.sent);
         return ret;
     }
 
@@ -81,5 +83,13 @@ public class MortgageApplication {
 
     public void setStatus(MortgageApplicationStatus status) {
         this.status = status;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }

@@ -30,5 +30,6 @@ create table mortgage_application (
     property TEXT,
     price DECIMAL,
     status VARCHAR(128) NOT NULL,
+    sent BOOL NOT NULL DEFAULT FALSE,
     created_date_time TIMESTAMP NOT NULL
 );

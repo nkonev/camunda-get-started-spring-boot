@@ -22,6 +22,11 @@
           type="warning"
           v-if = "currentApp.status == 'FULLSCORING_FAILED'"
       >Fullcoring failed</v-alert>
+      <v-alert
+          type="info"
+          class="mx-4"
+          v-if = "currentApp.status == 'AWAITING_MANUAL_FULLSCORING'"
+      >This app is waiting for manual full scoring</v-alert>
 
       <v-card-text v-if="canCreateNewApp">
         <v-btn @click="createNewApp()" class="primary">Create new application</v-btn>
@@ -60,7 +65,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn @click="saveApp()" class="primary" :loading="saving">Save</v-btn>
-          <v-btn v-if="appExists" @click="sendAppToCamunda()" class="primary" :loading="saving">Send</v-btn>
+          <v-btn v-if="appExists && canSendApp" @click="sendAppToCamunda()" class="primary" :loading="saving">Send</v-btn>
           <v-btn v-if="appExists" @click="deleteApp()" class="warning" :loading="saving">Cancel</v-btn>
         </v-card-actions>
       </template>
@@ -79,7 +84,8 @@
     const factory = () => {
         return {
           property: '',
-          price: 0
+          price: 0,
+          sent: false
         }
     }
 
@@ -138,6 +144,9 @@
           },
           canCreateNewApp() {
             return ['COMPLETED', 'PRESCORING_FAILED', 'USER_CANCELED', 'FULLSCORING_FAILED'].includes(this.currentApp.status)
+          },
+          canSendApp() {
+            return !this.currentApp.sent;
           }
         },
         methods: {
@@ -168,7 +177,14 @@
                 })
           },
           sendAppToCamunda() {
-            axios.put('/api/mortgage-application/send/' + this.currentApp.id)
+            this.saving = true;
+            this.loading = true;
+
+            axios.put('/api/mortgage-application/send/' + this.currentApp.id).then(value => {
+              this.saving = false;
+              this.loading = false;
+              this.currentApp = value.data;
+            })
           },
           deleteApp() {
             this.saving = true;

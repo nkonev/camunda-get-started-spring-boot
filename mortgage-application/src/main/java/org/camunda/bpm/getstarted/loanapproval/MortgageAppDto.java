@@ -13,6 +13,7 @@ class MortgageAppDto {
     private BigDecimal price;
     private MortgageApplicationStatus status;
     private Instant createdDateTime;
+    private boolean sent;
 
     public MortgageAppDto() {
     }
@@ -43,6 +44,7 @@ class MortgageAppDto {
         if (this.status != null) {
             ret.setStatus(this.status);
         }
+        ret.setSent(this.sent);
         return ret;
     }
 
@@ -57,6 +59,7 @@ class MortgageAppDto {
         if (this.status != null) {
             ret.setStatus(this.status);
         }
+        ret.setSent(this.sent);
         return ret;
     }
 
@@ -90,5 +93,13 @@ class MortgageAppDto {
 
     public void setStatus(MortgageApplicationStatus status) {
         this.status = status;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }
